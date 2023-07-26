@@ -105,9 +105,7 @@ class _LoginApp extends State<LoginApp> {
                                 suffixIcon: emailController.text.isEmpty
                                     ? IconButton(icon: const Icon(Icons.close),
                                     onPressed: () {
-                                      setState(() {
                                         emailController.clear();
-                                      });
                                     })
                                     : Container(
                                   width: 0,
