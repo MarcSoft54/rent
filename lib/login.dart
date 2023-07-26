@@ -16,18 +16,13 @@ class _LoginApp extends State<LoginApp> {
     bool passwordVisibility = true;
     String password;
 
-    @override
-    void initState(){
-      super.initState();
-
-    }
 
     return Scaffold(
       // appBar: AppBar(
       // title: const Text("marc dev", style: TextStyle(color: Colors.blue),),
       // backgroundColor: Colors.white,
       // ),
-        body: Center(
+        body: SingleChildScrollView(
           child: Column(children: [
             SizedBox(
               height: MediaQuery.of(context).size.height,
