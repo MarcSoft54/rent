@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rentalapp/login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -84,11 +85,14 @@ class _MyHomePageState extends State<MyHomePage> {
                           margin: EdgeInsets.only(right: width*.2),
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
-                              children: const <Widget>[
-                                Text("Already have an Account?"),
+                              children: <Widget>[
+                                const Text("Already have an Account?"),
                                 TextButton(
-                                    onPressed:null,
-                                    child: Text(
+                                    onPressed:(){
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) => const LoginApp()));
+                                    },
+                                    child: const Text(
                                       "Sign In",
                                       style: TextStyle(color: Colors.red),
                                     ))
