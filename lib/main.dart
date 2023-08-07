@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rentalapp/login.dart';
+import 'package:rentalapp/signIn.dart';
 
 void main() {
   runApp(const MyApp());
@@ -67,16 +68,21 @@ class _MyHomePageState extends State<MyHomePage> {
                               fontStyle: FontStyle.italic,
                               fontWeight: FontWeight.bold),
                         ),
-                        const ElevatedButton(
-                          onPressed: null,
-                          style: ButtonStyle(
+                        ElevatedButton(
+                          onPressed: (){
+                            setState(() {
+                              Navigator.push(context, MaterialPageRoute(builder: (BuildContext){
+                                return SignIn();
+                              }));
+                            });
+                          },
+                          style: const ButtonStyle(
                             backgroundColor:
                             MaterialStatePropertyAll<Color>(Colors.blue),
-                            fixedSize:
-                            MaterialStatePropertyAll<Size>(Size.fromHeight(40)),
+                            fixedSize: MaterialStatePropertyAll<Size>(Size.fromHeight(40)),
                             maximumSize: MaterialStatePropertyAll(Size.fromWidth(300)),
                           ),
-                          child: Text(
+                          child: const Text(
                             "Sign up",
                             style: TextStyle(color: Colors.white),
                           ),

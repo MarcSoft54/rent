@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:rentalapp/signIn.dart';
+
+import 'class/function.dart';
 
 class LoginApp extends StatefulWidget {
   const LoginApp({super.key});
@@ -78,9 +81,9 @@ class _LoginApp extends State<LoginApp> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Row(
+                              const Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
-                                children: const [
+                                children: [
                                   Text("Email or Phone number"),
                                 ],
                               ),
@@ -89,16 +92,16 @@ class _LoginApp extends State<LoginApp> {
                               emailBox(),
                               const Padding(
                                   padding: EdgeInsets.only(bottom: 15)),
-                              Row(
+                              const Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
-                                children: const [Text("Enter the password")],
+                                children: [Text("Enter the password")],
                               ),
                               const Padding(
                                   padding: EdgeInsets.only(bottom: 15)),
                               passWordBox(),
-                              Row(
+                              const Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
-                                children: const [
+                                children: [
                                   Padding(padding: EdgeInsets.only(top: 50)),
                                   TextButton(
                                       onPressed: null,
@@ -115,7 +118,7 @@ class _LoginApp extends State<LoginApp> {
                         ElevatedButton(
                           onPressed: () {
                             setState(() {
-                              if (checkEmail(email)) {
+                              if (checkEmail(email)) {                         //*************** check email
                                 //
                               } else {
                                 setState(() {
@@ -125,16 +128,27 @@ class _LoginApp extends State<LoginApp> {
                             });
                           },
                           style: const ButtonStyle(
-                              maximumSize:
-                              MaterialStatePropertyAll(Size.fromWidth(300)),
-                              fixedSize: MaterialStatePropertyAll<Size>(
-                                  Size.fromHeight(40)),
-                              backgroundColor:
-                              MaterialStatePropertyAll(Colors.blue)),
+                              maximumSize:MaterialStatePropertyAll(Size.fromWidth(300)),
+                              fixedSize: MaterialStatePropertyAll<Size>(Size.fromHeight(40)),
+                              backgroundColor: MaterialStatePropertyAll(Colors.blue)),
                           child: const Text(
                             "Sign In",
                             style: TextStyle(color: Colors.white),
                           ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            customText("create an account"),
+                            TextButton(
+                                onPressed: (){
+                                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext){
+                                    return SignIn();
+                                  }));
+                                }, 
+                                child: customText("here", color: Colors.red[500])),
+                            padding(right: 10)
+                          ],
                         ),
                         Container(
                           height: MediaQuery.of(context).size.width * .2,
@@ -145,11 +159,6 @@ class _LoginApp extends State<LoginApp> {
             )));
   }
 
-  bool checkEmail(String email) {
-    return RegExp(
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-        .hasMatch(email);
-  }
 
   Widget emailBox() {
     return TextField(

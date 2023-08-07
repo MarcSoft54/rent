@@ -1,0 +1,243 @@
+
+import 'package:flutter/material.dart';
+import 'package:rentalapp/login.dart';
+
+import 'class/function.dart';
+
+
+class SignIn extends StatefulWidget {
+  const SignIn({super.key});
+
+
+  @override
+  State<SignIn> createState() => _SignIn();
+}
+
+class _SignIn extends State<SignIn> {
+  final emailController = TextEditingController();
+  bool passwordVisibility = true;
+  var password;
+  var email = "marcdev45@gmail.com";
+  String name = 'marc';
+  var password_2;
+
+  var location;
+  var locationData;
+
+  List<String> items = ["Homme", "Femme"];
+  String? selectItem = 'Homme';
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: GestureDetector(
+          onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+          child: SingleChildScrollView(
+              child: Container(
+                margin: const EdgeInsets.only(right: 10, left: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: Column(
+                        children: [
+                          padding(top: 40),
+                          const Icon(
+                            Icons.cabin_outlined,
+                            size: 80,
+                            color: Colors.blue,
+                          ),
+                          customText("Create you account",size: 25, fontWeight: FontWeight.bold),
+                          customText("Fill in your fields to be able to create",size: 15)
+                        ],
+                      ),
+                    ),
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          padding(top: 20),
+                          TextField(
+                            decoration: InputDecoration(
+                                label: Row(
+                                  children: [
+                                    customText("Username"),
+                                    customText("*", color: Colors.red)
+                                  ],
+                                ),
+                                hintText: "marc",
+                                border: const OutlineInputBorder()),
+                          ),
+                          padding(top: 10),
+                          TextField(
+                            decoration: InputDecoration(
+                                label: Row(
+                                  children: [
+                                    customText("Username"),
+                                    customText("*", color: Colors.red)
+                                  ],
+                                ),
+                                hintText: "dev",
+                                border: const OutlineInputBorder()),
+                          ),
+                          padding(top: 10),
+                          TextField(
+                            controller: emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            onChanged: (value) {
+                              setState(() {
+                                email = value;
+                              });
+                            },
+                            decoration: InputDecoration(
+                              label: customText("Email"),
+                              hintText: "marcdev@gmail.com",
+                              prefixIcon: const Icon(
+                                Icons.email,
+                                color: Colors.red,
+                              ),
+                              suffixIcon: emailController.text.isNotEmpty
+                                  ? IconButton(
+                                  icon: const Icon(Icons.close),
+                                  onPressed: () {
+                                    setState(() {
+                                      emailController.clear();
+                                    });
+                                  })
+                                  : Container(
+                                width: 0,
+                              ),
+                              border: const OutlineInputBorder(),
+                            ),
+                            onSubmitted: (String value) => {email = value},
+                          ),
+                          padding(top: 10),
+                          passWordBox("password"),
+                          padding(top: 10),
+                          TextField(                            // ****** passWord check
+                            obscureText: passwordVisibility,
+                            decoration: InputDecoration(
+                                prefixIcon: const Icon(
+                                  Icons.key,
+                                  color: Colors.black,
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: (passwordVisibility)
+                                      ? const Icon(Icons.visibility_off)
+                                      : const Icon(Icons.visibility),
+                                  onPressed: () {
+                                    setState(() {
+                                      passwordVisibility = !passwordVisibility;
+                                    });
+                                  },
+                                ),
+                                label: customText("Enter back the same password"),
+                                hintText: "password",
+                                // errorText: "error password",
+                                border: const OutlineInputBorder()),
+                            onChanged: (String value) {
+                              password_2 = value;
+                            },
+                          ),
+                          padding(top: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                  width: 90,
+                                  height: 52.5,
+                                  child: DropdownButtonFormField<String>(
+                                    value: selectItem,
+                                    items: items
+                                        .map((item) => DropdownMenuItem<String>(
+                                        value: item,
+                                        child: customText(item, size: 11)))
+                                        .toList(),
+                                    onChanged: ((val){
+                                      setState(() {
+                                        selectItem = val;
+                                      });
+                                    }),
+                                    decoration: const InputDecoration(
+                                        label: Text("sex", style: TextStyle(fontSize: 22),),
+                                        border: OutlineInputBorder()
+                                    ),
+                                  )
+                              ),
+                              padding(left: 2),
+                              Expanded(
+                                  child: TextField(
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                        label: customText("Phone number"),
+                                        border: const OutlineInputBorder()
+                                    ),
+                                  ))
+                            ],),
+                          padding(top: 40),
+                          ElevatedButton(
+                            onPressed: null,                            // ************ Submit ***********
+                            style: const ButtonStyle(
+                                maximumSize:MaterialStatePropertyAll(Size.fromWidth(300)),
+                                fixedSize: MaterialStatePropertyAll<Size>(Size.fromHeight(40)),
+                                backgroundColor: MaterialStatePropertyAll(Colors.blue)
+                            ),
+                            child: customText("connexion", size: 22, color: Colors.white),
+                          ),
+                          padding(top: 50),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              customText("have an account"),
+                              TextButton(
+                                  onPressed: (){
+                                    setState(() {
+                                      Navigator.push(context, MaterialPageRoute(builder: (BuildContext){
+                                        return LoginApp();
+                                      }));
+                                    });
+                                  },
+                                  child: customText("login here", color: Colors.red[500]))
+                            ],
+                          ),
+                        ]
+                    ),
+                  ],
+                ),
+              )),
+        ));
+  }
+
+
+
+  Widget passWordBox(String string){
+    return TextField(
+      obscureText: passwordVisibility,
+      decoration: InputDecoration(
+          prefixIcon: const Icon(
+            Icons.key,
+            color: Colors.black,
+          ),
+          suffixIcon: IconButton(
+            icon: (passwordVisibility)
+                ? const Icon(Icons.visibility_off)
+                : const Icon(Icons.visibility),
+            onPressed: () {
+              setState(() {
+                passwordVisibility = !passwordVisibility;
+              });
+            },
+          ),
+          label: customText(string),
+          hintText: string,
+          // errorText: "error password",
+          border: const OutlineInputBorder()),
+      onSubmitted: (String value) {
+        password = value;
+      },
+    );
+  }
+
+
+}
