@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:rentalapp/login.dart';
 import 'package:rentalapp/signIn.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+// void main() {
+//   runApp(const MyApp());
+// }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -24,13 +24,17 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
+
   final String title;
+
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+
   String image ="https://th.bing.com/th/id/R.2039b86fe02a60700c5e0005b5e42191?rik=ikcpeUevqrj53Q&riu=http%3a%2f%2feurekaheritage.com%2fimages%2fHome+Tour+2006%2fHousePhotos%2fIris+House.jpg&ehk=J67SfKCWzU0c4q1REnIbeISmJnqUv5vE5OYofKJUAzA%3d&risl=&pid=ImgRaw&r=0";
 
 
