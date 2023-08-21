@@ -20,8 +20,13 @@ class Message{
     );
   }
 
+}
+
+class MessageDto{
+  String content;
+  MessageDto(this.content);
+
   Map<String, dynamic> toJson()=>{
     "content": content
   };
-
 }

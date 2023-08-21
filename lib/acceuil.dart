@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rentalapp/uploadArticle.dart';
+import 'package:rentalapp/class/uploadArticle.dart';
+import 'package:rentalapp/view/articleView.dart';
+import 'package:rentalapp/view/messageView.dart';
 
 
 void main() {
@@ -11,10 +13,11 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false,
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'RentApp',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: "RentApp"),
@@ -31,30 +34,57 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int currentPage = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       floatingActionButton: FloatingActionButton(
         onPressed: (){
           setState(() {
-            Navigator.push(context, MaterialPageRoute(builder: (BuildContext){
-              return UploadFile();
+            Navigator.push(context, MaterialPageRoute(builder: (context){
+              return const UploadFile();
             }));
           });
         },
-        child: Icon(Icons.file_upload_outlined),
+        child: const Icon(Icons.file_upload_outlined),
       ),
 
       bottomNavigationBar: NavigationBar(
-        destinations: [
-          Icon(Icons.home),
-          Icon(Icons.group),
-          Icon(Icons.message),
-          Icon(Icons.person)
+       onDestinationSelected: (int index){
+          setState(() {
+            currentPage = index;
+          });
+        },
+        selectedIndex: currentPage,
+        destinations: const[
+          NavigationDestination(
+            selectedIcon: Icon(Icons.home_outlined),
+              icon: Icon(Icons.home),
+              label: "home"),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.groups),
+              icon: Icon(Icons.group),
+              label: "subscribe"),
+          NavigationDestination(
+              selectedIcon: Icon(Icons.message),
+              icon: Icon(Icons.messenger),
+              label: "messages"),
+          NavigationDestination(
+              selectedIcon: Icon(Icons.perm_identity),
+              icon: Icon(Icons.person),
+              label: "profile"),
         ],
-
       ),
+      body:<Widget> [
+        ArticleView(),
+        Container(
+          color: Colors.green,
+        ),
+        MessageView(),
+        Container(
+          color: Colors.pink,
+        ),
+      ][currentPage]
     );
 
   }

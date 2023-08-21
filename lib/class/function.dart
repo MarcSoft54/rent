@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 
 Text customText(String data,
@@ -31,4 +34,20 @@ bool checkEmail(String email) {
   return RegExp(
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
       .hasMatch(email);
+}
+
+
+Icon customIcon(IconData iconData, {colors = Colors.black, size = 30.0}){
+  return Icon(
+   iconData,
+    size: size,
+    color: colors,
+  );
+}
+
+Widget buildImage(String urlImage, int index){
+  return Card(
+    elevation: 12,
+    child: Image.file(File(urlImage), fit: BoxFit.fill,)
+  );
 }

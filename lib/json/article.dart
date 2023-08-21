@@ -5,7 +5,7 @@ class Article{
   double priceArticle = 0;
   String city = '';
   String mapUrl = '';
-  String pictureUrl = '';
+  List<String> pictureUrl;
   String videoUrl = '';
   String description = '';
   int room = 0;
@@ -48,6 +48,34 @@ class Article{
     );
   }
 
+
+
+}
+
+class ArticleDto{
+
+  String typeArticle = '';
+  String country = '';
+  double priceArticle = 0;
+  String city = '';
+  String mapUrl = '';
+  List<String> pictureUrl;
+  String videoUrl = '';
+  String description = '';
+  int room = 0;
+  int shower = 0;
+  int parking  = 0;
+  int kitchen = 0;
+  int livingRoom = 0;
+
+  ArticleDto(
+      this.typeArticle, this.country,
+      this.priceArticle, this.city,
+      this.mapUrl, this.pictureUrl,
+      this.videoUrl, this.description,
+      this.room, this.shower, this.parking,
+      this.kitchen, this.livingRoom
+      );
   Map<String, dynamic> toJson() =>{
     "typeArticle": typeArticle,
     "country": country,
@@ -63,5 +91,4 @@ class Article{
     "kitchen": kitchen,
     "livingRoom": livingRoom
   };
-
 }
