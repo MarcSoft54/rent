@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:rentalapp/class/uploadArticle.dart';
-import 'package:rentalapp/view/articleView.dart';
-import 'package:rentalapp/view/messageView.dart';
+import 'package:rentalapp/class/function.dart';
+import 'package:rentalapp/profit/uploadArticle.dart';
+import 'package:rentalapp/view/article.dart';
+import 'package:rentalapp/view/message.dart';
+import 'package:rentalapp/view/profit.dart';
+import 'package:rentalapp/view/subscribe.dart';
 
 
 void main() {
@@ -17,7 +20,7 @@ class Home extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'RentApp',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: "RentApp"),
@@ -38,17 +41,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          setState(() {
-            Navigator.push(context, MaterialPageRoute(builder: (context){
-              return const UploadFile();
-            }));
-          });
-        },
-        child: const Icon(Icons.file_upload_outlined),
-      ),
-
       bottomNavigationBar: NavigationBar(
        onDestinationSelected: (int index){
           setState(() {
@@ -76,14 +68,10 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body:<Widget> [
-        ArticleView(),
-        Container(
-          color: Colors.green,
-        ),
-        MessageView(),
-        Container(
-          color: Colors.pink,
-        ),
+        const ArticleView(),
+        const Subscriber(),
+        const MessageView(),
+        const Profit()
       ][currentPage]
     );
 

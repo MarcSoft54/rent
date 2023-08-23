@@ -47,7 +47,7 @@ Icon customIcon(IconData iconData, {colors = Colors.black, size = 30.0}){
 
 Widget buildImage(String urlImage, int index){
   return Card(
-    elevation: 12,
+    elevation: 20,
     child: Image.file(File(urlImage), fit: BoxFit.fill,)
   );
 }

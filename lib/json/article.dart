@@ -16,18 +16,18 @@ class Article{
 
   Article({
     required this.id,
-    required this.typeArticle,
+    required this.typeArticle,//
     required this.country,
     required this.city,
     required this.mapUrl,
-    required this.pictureUrl,
-    required this.videoUrl,
-    required this.description,
-    required this.room,
-    required this.shower,
-    required this.parking,
-    required this.kitchen,
-    required this.livingRoom
+    required this.pictureUrl,//
+    required this.videoUrl,//*
+    required this.description,//
+    required this.room, //
+    required this.shower, //
+    required this.parking, //
+    required this.kitchen, //
+    required this.livingRoom //
   });
 
   factory Article.fromJson(Map<String, dynamic> json){
