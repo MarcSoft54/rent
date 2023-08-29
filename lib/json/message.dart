@@ -1,7 +1,7 @@
 class Message{
   var id;
   String content;
-  var createAt;
+  DateTime createAt;
   var createBy;
 
   Message({

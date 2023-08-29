@@ -22,7 +22,7 @@ class _ArticlePage extends State<ArticleView>{
           mainAxisAlignment:MainAxisAlignment.start,
           children: [
             customText("Rent", color: Colors.black, size: 25),
-            customText("App", color: Colors.blue, size: 35, fontSize: FontStyle.italic)
+            customText("App", color: Colors.blue, size: 30, fontSize: FontStyle.italic)
           ],
         ),
       ),

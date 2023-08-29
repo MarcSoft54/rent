@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rentalapp/class/function.dart';
 
-import 'uploadArticle.dart';
-
 class ViewArticle extends StatelessWidget{
   const ViewArticle({super.key});
 
@@ -31,16 +29,9 @@ class _View extends State<_ViewArticle>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          setState(() {
-            Navigator.push(context, MaterialPageRoute(builder: (context){
-              return const UploadFile();
-            }));
-          });
-        },
-        child: const Icon(Icons.file_upload_outlined),
-      ),
+      body: Center(
+        child: customText("Empty", size: 20),
+      )
     );
   }
 

@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:rentalapp/class/function.dart';
 import 'package:rentalapp/json/user.dart';
-import 'package:rentalapp/profit/articleCollection.dart';
 import 'package:rentalapp/subscribeViewArticle.dart';
 
 class Subscriber extends StatelessWidget{
@@ -82,16 +81,15 @@ class _SubscriberPage extends State<SubscribePage>{
                       child: Row(
                         children: [
                           Container(
-                            height: 50,
-                            width: 50,
-                            decoration:  BoxDecoration(
-                              border: Border.all(),
-                                image: const DecorationImage(
+                            height: 55,
+                            width: 45,
+                            decoration: const BoxDecoration(
+                                image: DecorationImage(
                                     fit: BoxFit.cover,
                                     image: AssetImage("images/account-2.png")
                                 ),
                                 // color: Colors.black38,
-                                borderRadius:const BorderRadius.all(Radius.circular(50))
+                                borderRadius: BorderRadius.all(Radius.circular(50))
                             ),
                           ),
                           padding(right: 20),

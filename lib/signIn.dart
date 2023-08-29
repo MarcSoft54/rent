@@ -135,12 +135,12 @@ class _SignIn extends State<SignIn> {
                               ),
                               suffixIcon: emailController.text.isNotEmpty
                                   ? IconButton(
-                                  icon: const Icon(Icons.close),
-                                  onPressed: () {
-                                    setState(() {
-                                      emailController.clear();
-                                    });
-                                  })
+                                    icon: const Icon(Icons.close),
+                                    onPressed: () {
+                                      setState(() {
+                                        emailController.clear();
+                                      });
+                                    })
                                   : Container(
                                 width: 0,
                               ),

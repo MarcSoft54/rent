@@ -3,6 +3,8 @@ import 'package:rentalapp/class/function.dart';
 import 'package:rentalapp/profit/articleCollection.dart';
 import 'package:rentalapp/profit/person.dart';
 
+import '../profit/uploadArticle.dart';
+
 class Profit extends StatelessWidget{
   const Profit({super.key});
 
@@ -34,11 +36,22 @@ class _ProfitPage extends State<ProfitPage>{
       initialIndex: 1,
         length: 2,
         child: Scaffold(
+            floatingActionButton: FloatingActionButton(
+              onPressed: (){
+                setState(() {
+                  Navigator.push(context, MaterialPageRoute(builder: (context){
+                    return const UploadFile();
+                  }));
+                });
+              },
+              child: const Icon(Icons.file_upload_outlined),
+            ),
+
           appBar: AppBar(
             title: Row(
               mainAxisAlignment:MainAxisAlignment.start,
               children: [
-                customText("Work", color: Colors.black, size: 30),
+                customText("Work", color: Colors.black, size: 29),
                 customText("Space", color: Colors.blue, size: 25, fontSize: FontStyle.italic)
               ],
             ),

@@ -58,8 +58,8 @@ class _MyHomePageState extends State<MyHomePage> {
               icon: Icon(Icons.group),
               label: "subscribe"),
           NavigationDestination(
-              selectedIcon: Icon(Icons.message),
-              icon: Icon(Icons.messenger),
+              selectedIcon: Icon(Icons.question_answer_outlined),
+              icon: Icon(Icons.question_answer_sharp),
               label: "messages"),
           NavigationDestination(
               selectedIcon: Icon(Icons.perm_identity),
