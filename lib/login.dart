@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rentalapp/signIn.dart';
 
 import 'class/function.dart';
+
+class Log extends StatelessWidget{
+  const Log({super.key});
+
+  @override
+  Widget build(BuildContext context){
+    return MaterialApp(
+      theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+          useMaterial3: true
+      ),
+      home: const LoginApp(),
+    );
+  }
+}
 
 class LoginApp extends StatefulWidget {
   const LoginApp({super.key});
@@ -18,144 +34,104 @@ class _LoginApp extends State<LoginApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+
+        ),
         body: GestureDetector(
             onTap: (() => FocusScope.of(context).requestFocus(FocusNode())),
             child: SingleChildScrollView(
-              child: Column(children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              SizedBox(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: 25,
-                                    ),
-                                    const Text(
-                                      "Welcome to ",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    const Text(
-                                      "RentApp",
-                                      style: TextStyle(
-                                        color: Colors.blue,
-                                        fontSize: 22,
-                                        fontStyle: FontStyle.italic,
-                                      ),
-                                    )
-                                  ],
-                                ),
+                padding:const EdgeInsets.only(left: 10, right: 10, top: 20),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  customText("Welcome to ", size: 30),
+                                  customText("RentApp",
+                                      size: 40,
+                                      fontSize: FontStyle.italic,
+                                      color: Colors.blue)
+                                ],
                               ),
-                              Container(
-                                color: Colors.blue,
+                            ),
+                            padding(top: 70),
+                            Container(
                                 width: 300,
                                 height: 45,
-                                padding: const EdgeInsets.only(top: 5),
-                                margin: const EdgeInsets.only(
-                                  top: 25,
-                                  left: 10,
-                                  right: 10,
+                                alignment: Alignment.center,
+                                decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    color: Colors.blue
                                 ),
-                                child: const Text(
-                                  "login",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 30,
-                                      color: Colors.white,
-                                      fontStyle: FontStyle.normal),
-                                ),
-                              ),
-                            ]),
-                        Container(
-                          margin: const EdgeInsets.only(left: 25, right: 25),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text("Email or Phone number"),
-                                ],
-                              ),
-                              const Padding(
-                                  padding: EdgeInsets.only(bottom: 15)),
-                              emailBox(),
-                              const Padding(
-                                  padding: EdgeInsets.only(bottom: 15)),
-                              const Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [Text("Enter the password")],
-                              ),
-                              const Padding(
-                                  padding: EdgeInsets.only(bottom: 15)),
-                              passWordBox(),
-                              const Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Padding(padding: EdgeInsets.only(top: 50)),
-                                  TextButton(
-                                      onPressed: null,
-                                      child: Text(
-                                        "password forget",
-                                        style: TextStyle(color: Colors.blue),
-                                      )),
-                                  Padding(padding: EdgeInsets.only(bottom: 7)),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              if (checkEmail(email)) {                         //*************** check email
-                                //
-                              } else {
-                                setState(() {
-                                  Navigator.pop;
-                                });
-                              }
-                            });
-                          },
-                          style: const ButtonStyle(
-                              maximumSize:MaterialStatePropertyAll(Size.fromWidth(300)),
-                              fixedSize: MaterialStatePropertyAll<Size>(Size.fromHeight(40)),
-                              backgroundColor: MaterialStatePropertyAll(Colors.blue)),
-                          child: const Text(
-                            "Sign In",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                                child:customText("login", color: Colors.white, size: 30)
+                            ),
+                          ]),
+                      padding(top: 40),
+                      Container(
+                        margin: const EdgeInsets.only(left: 25, right: 25),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            customText("create an account"),
-                            TextButton(
-                                onPressed: (){
-                                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext){
-                                    return SignIn();
-                                  }));
-                                }, 
-                                child: customText("here", color: Colors.red[500])),
-                            padding(right: 10)
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              child: customText("Email or Phone number"),
+                            ),
+                            padding(top: 10),
+                            emailBox(),
+                            padding(top: 20),
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              child: customText("Enter the password"),
+                            ),
+                            padding(top: 10),
+                            passWordBox(),
+                            padding(top: 20),
+                            Container(
+                                alignment: Alignment.centerRight,
+                                child: TextButton(
+                                    onPressed: ()=>passForget(context),
+                                    child: customText("password forget",
+                                      color: Colors.blue
+                                    )),
+                            )
                           ],
                         ),
-                        Container(
-                          height: MediaQuery.of(context).size.width * .2,
-                        )
-                      ]),
-                )
-              ]),
+                      ),
+                      padding(top: 60),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            if (checkEmail(email)) {                         //*************** check email
+                              passForget(context);
+                            } else {
+                              setState(() {
+                                Navigator.pop;
+                              });
+                            }
+                          });
+                        },
+                        style: const ButtonStyle(
+                            maximumSize:MaterialStatePropertyAll(Size.fromWidth(300)),
+                            fixedSize: MaterialStatePropertyAll<Size>(Size.fromHeight(40)),
+                            backgroundColor: MaterialStatePropertyAll(Colors.blue)),
+                        child: customText("Sign In",color: Colors.white, size: 20),
+                      ),
+                      padding(top: 40),
+                      Container(
+                        alignment: Alignment.centerRight,
+                          child: TextButton(
+                              onPressed: (){
+                                GoRouter.of(context).push("/signIn");
+                              },
+                              child: customText("create an account")),
+                      ),
+                    ])
             )));
   }
 
@@ -211,11 +187,12 @@ class _LoginApp extends State<LoginApp> {
           ),
           label: const Text("Password"),
           hintText: "password",
-          // errorText: "error password",
           border: const OutlineInputBorder()),
       onSubmitted: (String value) {
         password = value;
       },
     );
   }
+
+
 }

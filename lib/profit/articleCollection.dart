@@ -1,38 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:rentalapp/class/function.dart';
 
-class ViewArticle extends StatelessWidget{
-  const ViewArticle({super.key});
+import '../json/user.dart';
+
+class ViewArticle extends StatefulWidget{
+  const ViewArticle(this.user, {super.key});
+
+  final User user;
 
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true
-      ),
-      home: _ViewArticle(),
-    );
-  }
-
+  State<ViewArticle> createState() => _ViewPage();
 }
 
-class _ViewArticle extends StatefulWidget{
+class _ViewPage extends State<ViewArticle>{
 
   @override
-  State<_ViewArticle> createState()=>_View();
-}
-
-class _View extends State<_ViewArticle>{
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return Scaffold(
-      body: Center(
-        child: customText("Empty", size: 20),
-      )
+      appBar: AppBar(
+        title: customText(widget.user.username),
+      ),
     );
   }
-
 }

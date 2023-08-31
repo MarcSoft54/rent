@@ -47,9 +47,9 @@ Message sms = Message(
         onTap: (() => FocusScope.of(context).requestFocus(FocusNode())),
         child: (messageList.isEmpty)
           ?  const Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
               CircularProgressIndicator()
             ],
           ),

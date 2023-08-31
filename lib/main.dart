@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:rentalapp/login.dart';
 import 'package:rentalapp/signIn.dart';
 
-// void main() {
-//   runApp(const MyApp());
-// }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -114,7 +110,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       ],
                     ),
                   ),
-                ))
+                )),
+
           ]),
         ));
   }

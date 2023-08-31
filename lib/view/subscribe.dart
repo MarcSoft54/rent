@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:rentalapp/class/function.dart';
 import 'package:rentalapp/json/user.dart';
-import 'package:rentalapp/subscribeViewArticle.dart';
+import 'package:rentalapp/profit/articleCollection.dart';
 
 class Subscriber extends StatelessWidget{
   const Subscriber({super.key});
@@ -62,7 +62,7 @@ class _SubscriberPage extends State<SubscribePage>{
         ),
         body: ListView.builder(
           padding: const EdgeInsets.only(top: 15, left: 5, right: 5),
-            itemCount: 3,
+            itemCount: 1,
             itemBuilder: (context, index){
               var user1 = user;
               return Column(
@@ -70,19 +70,20 @@ class _SubscriberPage extends State<SubscribePage>{
                   InkWell(
                     onTap: (){
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (BuildContext){
-                            return SubArticle(user);
+                          MaterialPageRoute(
+                              builder: (BuildContext context){
+                            return ViewArticle(user);
                           }));
                     },
                     child: Container(
-                      height: 50,
+                      height:40,
                       width: MediaQuery.of(context).size.width,
                       padding: const EdgeInsets.only(left: 20, right: 20),
                       child: Row(
                         children: [
                           Container(
-                            height: 55,
-                            width: 45,
+                            height: 40,
+                            width: 40,
                             decoration: const BoxDecoration(
                                 image: DecorationImage(
                                     fit: BoxFit.cover,
@@ -95,7 +96,7 @@ class _SubscriberPage extends State<SubscribePage>{
                           padding(right: 20),
                           Expanded(
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Row(
                                     children: [
@@ -111,7 +112,7 @@ class _SubscriberPage extends State<SubscribePage>{
                               )
                           ),
                           Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Row(
                                 children: [

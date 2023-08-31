@@ -10,8 +10,10 @@ import 'package:video_player/video_player.dart';
 import '../class/function.dart';
 import '../json/article.dart';
 
+
 class UploadFile extends StatefulWidget{
-  const UploadFile({super.key});
+   var id;
+  UploadFile({super.key, required this.id});
 
 
   @override
@@ -24,7 +26,10 @@ class _UploadFile extends State<UploadFile>{
   final dio = Dio();
   var pictures ;
   var videoUrl;
+  double price = 0;
+  String city = '';
   List<String> images = [];
+  String description = '';
   List<String> types = [
     "none",
     "Chambre modern",
@@ -48,6 +53,7 @@ class _UploadFile extends State<UploadFile>{
   int selectLivingRoom= 0;
 
 
+
   @override
   void initState() {
     super.initState();
@@ -61,16 +67,16 @@ class _UploadFile extends State<UploadFile>{
 
 
 
-  // Future<void> postArticle(ArticleDto articleDto) async{
-  //   try{
-  //     Response response = await dio.post("http://localhost:9001/api/articles/", data: articleDto.toJson());
-  //     if(response.statusCode == 200){
-  //       print(response.data);
-  //     }
-  //   }catch(e){
-  //     print(e);
-  //   }
-  // }
+  Future<void> postArticle(ArticleDto articleDto, int userIde) async{
+    try{
+      Response response = await dio.post("http://localhost:9001/api/articles?userId=$userIde", data: articleDto.toJson());
+      if(response.statusCode == 200){
+        print(response.data);
+      }
+    }catch(e){
+      print(e);
+    }
+  }
 
 
   Future<void> getVideo() async{
@@ -114,10 +120,10 @@ class _UploadFile extends State<UploadFile>{
     double size = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blue[200],
         title: customText("upload you home", size: 20),
       ),
       body: GestureDetector(
-
         onTap:() => FocusScope.of(context).requestFocus(FocusNode()),
         child: SingleChildScrollView(
           padding: const EdgeInsets.only(left: 2, right: 2),
@@ -130,17 +136,17 @@ class _UploadFile extends State<UploadFile>{
                 child: Card(
                   elevation: 12,
                   child: Container(
-                    decoration: const BoxDecoration(
-                        image: DecorationImage(fit: BoxFit.cover,
-                            image:AssetImage("images/house.png")
-                        )
-                    ),
-                    child:(_controller.value.isInitialized)?
-                    AspectRatio(
-                        aspectRatio: _controller.value.aspectRatio,
-                        child: VideoPlayer(_controller)
-                    )
-                        :Container()
+                      decoration: const BoxDecoration(
+                          image: DecorationImage(fit: BoxFit.cover,
+                              image:AssetImage("images/house.png")
+                          )
+                      ),
+                      child:(_controller.value.isInitialized)?
+                      AspectRatio(
+                          aspectRatio: _controller.value.aspectRatio,
+                          child: VideoPlayer(_controller)
+                      )
+                          :Container()
                   ),
                 ),
               ),
@@ -175,42 +181,45 @@ class _UploadFile extends State<UploadFile>{
                 ),
               ),
               padding(top: 20),
-              const TextField(
+              TextField(
                 minLines: 1,
                 maxLines: 5,
                 maxLength: 500,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     hintText: "give you condition ...",
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(12.0)))
                 ),
+                onChanged: (string){
+                  setState(() {
+                    description = string;
+                  });
+                },
               ),
               padding(top: 25),
-              SizedBox(
-                width: 200,
-                child: customText("Monsieur : {} \nSelect the characteristic of you home\n",
-                    size: 18, color: Colors.redAccent
-                ),
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   customText("Select the types of\n you are house"),
                   SizedBox(
-                    width: 240,
+                    width: 200,
                     child: DropdownButtonFormField(
-                      decoration: const InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide: BorderSide(width: 1, color: Colors.blue)
-                        )
-                      ),
+                        decoration: const InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                borderSide: BorderSide(width: 1, color: Colors.blue)
+                            )
+                        ),
                         value: selectType,
                         items: types
                             .map((select) => DropdownMenuItem<String>(
                             value: select,
                             child: customText(select))).toList(),
-                        onChanged: null),
+                        onChanged: (string){
+                          setState(() {
+                            selectType = string!;
+                          });
+                        }),
                   )
                 ],
               ),
@@ -233,7 +242,11 @@ class _UploadFile extends State<UploadFile>{
                             .map((select) => DropdownMenuItem(
                             value: select,
                             child: customText("$select"))).toList(),
-                        onChanged: null),
+                        onChanged: (string){
+                          setState(() {
+                            selectRoom = string!;
+                          });
+                        }),
                   )
                 ],
               ),
@@ -256,7 +269,11 @@ class _UploadFile extends State<UploadFile>{
                             .map((select) => DropdownMenuItem(
                             value: select,
                             child: customText("$select"))).toList(),
-                        onChanged: null),
+                        onChanged: (string){
+                          setState(() {
+                            selectShowers = string!;
+                          });
+                        }),
                   )
                 ],
               ),
@@ -279,7 +296,11 @@ class _UploadFile extends State<UploadFile>{
                             .map((select) => DropdownMenuItem(
                             value: select,
                             child: customText("$select"))).toList(),
-                        onChanged: null),
+                        onChanged: (string){
+                          setState(() {
+                            selectKitchen = string!;
+                          });
+                        }),
                   )
                 ],
               ),
@@ -302,7 +323,11 @@ class _UploadFile extends State<UploadFile>{
                             .map((select) => DropdownMenuItem(
                             value: select,
                             child: customText("$select"))).toList(),
-                        onChanged: null),
+                        onChanged: (string){
+                          setState(() {
+                            selectParking = string!;
+                          });
+                        }),
                   )
                 ],
               ),
@@ -327,7 +352,37 @@ class _UploadFile extends State<UploadFile>{
                             .map((select) => DropdownMenuItem(
                             value: select,
                             child: customText("$select"))).toList(),
-                        onChanged: null),
+                        onChanged: (string){
+                          setState(() {
+                            selectLivingRoom = string!;
+                          });
+                        }),
+                  )
+                ],
+              ),
+              padding(top: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  customText("Price:"),
+                  padding(left: 10),
+                  SizedBox(
+                    width: 200,
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              borderSide: BorderSide(width: 1, color: Colors.blue)
+                          ),
+                        border: OutlineInputBorder()
+                      ),
+                      onSubmitted: (string){
+                        setState(() {
+                          price = double.parse(string);
+                        });
+                      },
+                    ),
                   )
                 ],
               ),
@@ -338,18 +393,18 @@ class _UploadFile extends State<UploadFile>{
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            _controller.value.isPlaying
-                ? _controller.pause()
-                : _controller.play();
-          });
-        },
-        child: Icon(
-          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-        ),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     setState(() {
+      //       _controller.value.isPlaying
+      //           ? _controller.pause()
+      //           : _controller.play();
+      //     });
+      //   },
+      //   child: Icon(
+      //     _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+      //   ),
+      // ),
     );
   }
 

@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:rentalapp/class/function.dart';
-import 'package:rentalapp/profit/uploadArticle.dart';
 import 'package:rentalapp/view/article.dart';
 import 'package:rentalapp/view/message.dart';
 import 'package:rentalapp/view/profit.dart';
 import 'package:rentalapp/view/subscribe.dart';
 
 
-void main() {
-  runApp(const Home());
-}
+// void main() {
+//   runApp(const Home());
+// }
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -37,6 +35,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+
   int currentPage = 0;
   @override
   Widget build(BuildContext context) {

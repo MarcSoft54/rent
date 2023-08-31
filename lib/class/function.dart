@@ -51,3 +51,38 @@ Widget buildImage(String urlImage, int index){
     child: Image.file(File(urlImage), fit: BoxFit.fill,)
   );
 }
+
+showNoConnect(BuildContext context){
+  return showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return SimpleDialog(
+          children: [
+            Column(
+              children: [
+                customIcon(Icons.wifi_off, size: 80.0, colors: Colors.black38),
+                customText("no connexion")
+              ],
+            )
+          ],
+        );
+      });
+}
+
+Future passForget(BuildContext context) {
+  return showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return SimpleDialog(
+          children: [
+            Column(
+              children: [
+                customIcon(Icons.not_interested_outlined, colors: Colors.red,
+                    size: 100.0),
+                customText("no available")
+              ],
+            )
+          ],
+        );
+      });
+}
