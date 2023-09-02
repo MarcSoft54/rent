@@ -1,12 +1,13 @@
 
-import 'dart:ui';
-
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:rentalapp/class/function.dart';
 
 import '../json/message.dart';
+import '../json/user.dart';
 
 class MessagePage extends StatefulWidget {
 
@@ -24,13 +25,66 @@ class _MessagePage extends State<MessagePage>{
   List<Message> listMessage = [];
   final text = TextEditingController();
   String sms = '';
+  User user = User(
+    id: 0,
+    username: "",
+    surname: "",
+    email: "",
+    sex: "",
+    country: "",
+    phoneNumber: 0
+  );
 
+
+  Dio dio = Dio();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     listMessage.add(widget.message);
+    getOneUser();
+    getAllSms();
   }
+
+  Future getAllSms() async{
+    try{
+      Response response = await dio.get("http://localhost:9001/api/messages/${widget.message.createBy}");
+      if(response.statusCode == 200){
+        setState(() {
+         List<dynamic> list = response.data;
+         print(list);
+         for(int i=0; i<list.length; i++ ){
+           Message message = Message.fromJson(list[i]);
+           listMessage.add(message);
+         }
+        });
+      }
+    }catch(e){
+      print(e);
+    }
+  }
+
+  getOneUser()async{
+    try{
+      Response response = await dio.get("http://localhost:9001/api/users/${widget.message.createBy}");
+      if(response.statusCode == 200){
+        setState(() {
+          user = User.fromJson(response.data);
+        });
+      }
+    }catch(e){
+      print(e);
+    }
+  }
+
+  postMessage(MessageDto messageDto, var id) async{
+    try{
+      Response response = await dio.post("http://localhost:9001/api/messages/$id", data: messageDto.toJson() );
+    }catch(e){
+      print(e);
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +92,7 @@ class _MessagePage extends State<MessagePage>{
       onTap: (() => FocusScope.of(context).requestFocus(FocusNode())),
       child: Scaffold(
         appBar: AppBar(
-          title: customText("${widget.message.createBy}"),
+          title:(user.username.isEmpty)?const Text(" "):customText(user.username),
         ),
         body: Column(
           children: [
@@ -50,8 +104,9 @@ class _MessagePage extends State<MessagePage>{
                 useStickyGroupSeparators: true,
                 floatingHeader: true,
                 elements: listMessage,
-                groupBy: (sms) => DateTime(widget.message.createAt.day),
+                groupBy: (sms) => DateTime.parse(widget.message.createAt),
                 groupHeaderBuilder: (Message message){
+                  var date = DateTime.parse(widget.message.createAt);
                   return SizedBox(
                     height: 40,
                     child: Center(
@@ -60,7 +115,7 @@ class _MessagePage extends State<MessagePage>{
                         child: Padding(
                           padding: const EdgeInsets.all(8),
                           child: customText(
-                              DateFormat.yMMMd().format(message.createAt), size: 12
+                              DateFormat.yMMMd().format(date), size: 12
                           ),
                         ),
                       ),
@@ -100,18 +155,21 @@ class _MessagePage extends State<MessagePage>{
                 decoration: InputDecoration(
                   icon: IconButton(
                       onPressed: (){
-                        setState(() {
                           text.clear();
-                          final message = Message(
-                              id: 1,
-                              content: sms,
-                              createAt: DateTime.now(),
-                              createBy: 1
-                          );
-                          listMessage.add(message);
-                        });
+                           MessageDto messageDto = MessageDto(
+                             sms, 2
+                           );
+
+                          sms = '';
+                          postMessage(messageDto, user.id).then((value){
+                            setState(() {
+                              listMessage.add(value);
+                            });
+                          });
+
                       },
-                      icon: const Icon(Icons.send_rounded)),
+                      icon: const Icon(Icons.send_rounded, color: Colors.blue)
+                  ),
                   border: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(22))
                   ),

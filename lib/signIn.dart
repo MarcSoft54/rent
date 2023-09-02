@@ -1,7 +1,8 @@
 
+import 'package:animator/animator.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:rentalapp/http_services/http_service_user.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:rentalapp/json/user.dart';
 import 'package:rentalapp/login.dart';
 
@@ -11,8 +12,9 @@ class Sign extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        useMaterial3: true
+          useMaterial3: true
       ),
       home: const SignIn(),
     );
@@ -34,8 +36,10 @@ class _SignIn extends State<SignIn> {
   var email = "marcdev45@gmail.com";
   String name = 'marc';
 
-  List<String> items = ["None","Male", "Female"];
-  String? selectItem = "None";
+  Dio dio = Dio();
+
+  List<String> items = ["sex","Male", "Female"];
+  String? selectItem = "sex";
   bool b = false;
 
   // *************************   Variables of the User
@@ -58,74 +62,80 @@ class _SignIn extends State<SignIn> {
     try{
       Response response = await dio.post("http://localhost:9001/api/users",
           data: user.toJon());
-
       if(response.statusCode == 200){
-        messages = response.data;
+        setState(() {
+          messages = response.data;
+        });
       }
     }catch(e){
-      statusCode = e;
-      print(statusCode);
+      setState(() {
+        statusCode = e;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+        appBar: AppBar(
 
-      ),
+        ),
         body: GestureDetector(
           onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
           child: SingleChildScrollView(
-            padding: const EdgeInsets.only(left: 10, right: 10, top: 20),
-              child: Column(
-                children: [
-                  Column(
+            padding: const EdgeInsets.only(left: 10, right: 10),
+            child: Column(
+              children: [
+                Column(
+                  children: [
+                    SizedBox(
+                      height: 100,
+                      width: 100,
+                      child: Animator(
+                        duration: const Duration(milliseconds: 1000),
+                        cycles: 0,
+                        curve: Curves.easeInOut,
+                        tween: Tween(begin: 15.0,end: 25.0),
+                        builder: (context, animatoState, child) =>
+                            customIcon(Icons.cabin_outlined,colors: Colors.blue,
+                                size: animatoState.value *4
+                            ),
+                      ),
+                    ),
+                    customText("Create you account",size: 25, fontWeight: FontWeight.bold),
+                    customText("Fill in your fields to be able to create",size: 15)
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Column(
                     children: [
-                      customIcon(Icons.cabin_outlined, size: 80.0, colors: Colors.blue),
-                      customText("Create you account",size: 25, fontWeight: FontWeight.bold),
-                      customText("Fill in your fields to be able to create",size: 15)
-                    ],
-                  ),
-                  Column(
-                      children: [
-                        padding(top: 20),
-                        TextField(
-                          onSubmitted: (vale){
-                            setState(() {
-                              username = vale;
-                            });
-                          },
-                          decoration: InputDecoration(
-                              label: Row(
-                                children: [
-                                  customText("Username"),
-                                  customText("*", color: Colors.red)
-                                ],
-                              ),
-                              hintText: "marc",
-                              border: const OutlineInputBorder(),
-                          ),
+                      SizedBox(
+                        height: 45,
+                        child: TextField(
+                            onSubmitted: (vale){
+                              setState(() {
+                                username = vale;
+                              });
+                            },
+                            decoration: buildInputDecoration("Username", Icons.person)
                         ),
-                        padding(top: 10),
-                        TextField(
-                          onSubmitted: (val){
-                            setState(() {
-                              surname = val;
-                            });
-                          },
-                          decoration: InputDecoration(
-                              label: Row(
-                                children: [
-                                  customText("Username"),
-                                  customText("*", color: Colors.red)
-                                ],
-                              ),
-                              hintText: "dev",
-                              border: const OutlineInputBorder()),
+                      ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        height: 45,
+                        child: TextField(
+                            onSubmitted: (val){
+                              setState(() {
+                                surname = val;
+                              });
+                            },
+                            decoration: buildInputDecoration("Surname", Icons.person)
                         ),
-                        padding(top: 10),
-                        TextField(
+                      ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        height: 45,
+                        child: TextField(
                           controller: emailController,
                           keyboardType: TextInputType.emailAddress,
                           onSubmitted: (value) {
@@ -136,77 +146,81 @@ class _SignIn extends State<SignIn> {
                           decoration: InputDecoration(
                             label: customText("Email"),
                             hintText: "marcdev@gmail.com",
-                            prefixIcon: customIcon(Icons.email,colors: Colors.red),
+                            prefixIcon: const Icon(Icons.email_outlined,color: Colors.red),
                             suffixIcon: emailController.text.isNotEmpty
                                 ? IconButton(
-                                  icon: customIcon(Icons.close, size: 23.0),
-                                  onPressed: () {
-                                    setState(() {
-                                      emailController.clear();
-                                    });
-                                  })
+                                icon: customIcon(Icons.close),
+                                onPressed: () {
+                                  setState(() {
+                                    emailController.clear();
+                                  });
+                                })
                                 : Container(
                               width: 0,
                             ),
-                            border: const OutlineInputBorder(),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
                           ),
                         ),
-                        padding(top: 10),
-                        passWordBox("password"),
-                        padding(top: 10),
-                        TextField(                            // ****** passWord check
+                      ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        height: 45,
+                        child: passWordBox("password")
+                      ),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        height: 45,
+                        child: TextField(                            // ****** passWord check
                           obscureText: passwordVisibility,
                           decoration: InputDecoration(
-                              prefixIcon: customIcon(
-                                Icons.key,
-                                colors: Colors.black,
-                                size: 23.0
-                              ),
-                              suffixIcon: IconButton(
-                                icon: (passwordVisibility)
-                                    ? const Icon(Icons.visibility_off)
-                                    : const Icon(Icons.visibility),
-                                onPressed: () {
-                                  setState(() {
-                                    passwordVisibility = !passwordVisibility;
-                                  });
-                                },
-                              ),
-                              label: customText("Enter back the same password"),
-                              hintText: "password",
-                              border: const OutlineInputBorder()),
+                            prefixIcon: const Icon(
+                              Icons.password,
+                              color: Colors.black,
+                            ),
+                            suffixIcon: IconButton(
+                              icon: (passwordVisibility)
+                                  ? const Icon(Icons.visibility_off)
+                                  : const Icon(Icons.visibility),
+                              onPressed: () {
+                                setState(() {
+                                  passwordVisibility = !passwordVisibility;
+                                });
+                              },
+                            ),
+                            label: customText("Enter back the same password"),
+                            hintText: "password",
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),),
                           onSubmitted: (String value) {
                             setState(() {
                               password_2 = value;
                             });
                           },
                         ),
-                        padding(top: 10),
-                        Row(
-                          children: [
-                            SizedBox(
-                                width: 90,
-                                height: 52,
-                                child: DropdownButtonFormField<String>(
-                                  value: selectItem,
-                                  items: items
-                                      .map((item) => DropdownMenuItem<String>(
-                                      value: item,
-                                      child: customText(item, size: 11)))
-                                      .toList(),
-                                  onChanged: ((val){
-                                    setState(() {
-                                      sex = val!;
-                                    });
-                                  }),
-                                  decoration: const InputDecoration(
-                                      label: Text("sex", style: TextStyle(fontSize: 22),),
-                                      border: OutlineInputBorder()
-                                  ),
-                                )
-                            ),
-                            padding(left: 2),
-                            Expanded(
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          SizedBox(
+                              width: 90,
+                              height: 45,
+                              child: DropdownButtonFormField<String>(
+                                value: selectItem,
+                                items: items
+                                    .map((item) => DropdownMenuItem<String>(
+                                    value: item,
+                                    child: customText(item, size: 11)))
+                                    .toList(),
+                                onChanged: ((val){
+                                  setState(() {
+                                    sex = val!;
+                                  });
+                                }),
+                              )
+                          ),
+                          padding(left: 1),
+                          Expanded(
+                              child: SizedBox(
+                                height: 45,
                                 child: TextField(
                                   keyboardType: TextInputType.number,
                                   onSubmitted: (value){
@@ -215,13 +229,17 @@ class _SignIn extends State<SignIn> {
                                     });
                                   },
                                   decoration: InputDecoration(
-                                      label: customText("Phone number"),
-                                      border: const OutlineInputBorder()
+                                    label: customText("Phone number"),
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
                                   ),
-                                ))
-                          ],),
-                        padding(top: 40),
-                        ElevatedButton(
+                                ),
+                              ),)
+                        ],),
+                      const SizedBox(height: 50),
+                      SizedBox(
+                        height: 40,
+                        width: 150,
+                        child: ElevatedButton(
                           onPressed: (){
                             setState(() {
                               // print(
@@ -234,7 +252,7 @@ class _SignIn extends State<SignIn> {
                                 if(password != password_2){
                                   messages = "Different Pass";
                                 }else if(statusCode != null){
-                                 showNoConnect(context);
+                                  showNoConnect(context);
                                 }else{
                                   UserDto userDto = UserDto(
                                       username,
@@ -251,38 +269,36 @@ class _SignIn extends State<SignIn> {
                               }
                             });
                           },                            // ************ Submit ***********
-                          style: const ButtonStyle(
-                              maximumSize:MaterialStatePropertyAll(Size.fromWidth(300)),
-                              fixedSize: MaterialStatePropertyAll<Size>(Size.fromHeight(40)),
-                              backgroundColor: MaterialStatePropertyAll(Colors.blue)
-                          ),
+                          style: customStyleButton(),
                           child: customText("connexion", size: 22, color: Colors.white),
                         ),
-                        padding(top: 20),
-                        customText((b)? "Please verified you information":
-                        (messages == "isPresent")?"you are present just sign in,":
-                        (messages == "Different Pass")? "check you password...": "", color: Colors.red),
-                        padding(top: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            customText("have an account"),
-                            TextButton(
-                                onPressed: (){
-                                  setState(() {
-                                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext){
-                                      return LoginApp();
-                                    }));
-                                  });
-                                },
-                                child: customText("login here", color: Colors.red[500]))
-                          ],
-                        ),Container(height: 40,)
-                      ]
-                  ),
+                      ),
+                      const SizedBox(height: 5),
+                      customText((b)? "Please verified you information":
+                      (messages == "isPresent")?"you are present just sign in,":
+                      (messages == "Different Pass")? "check you password...": "", color: Colors.red),
+                      const SizedBox(height: 5),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          customText("have an account"),
+                          TextButton(
+                              onPressed: (){
+                                setState(() {
+                                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext){
+                                    return const LoginApp();
+                                  }));
+                                });
+                              },
+                              child: customText("login here", color: Colors.red[500]))
+                        ],
+                      )
+                    ]
+                ),
+                const SizedBox(height: 20),
 
-                ],
-              ),
+              ],
+            ),
           ),
         ));
   }
@@ -293,24 +309,24 @@ class _SignIn extends State<SignIn> {
     return TextField(
       obscureText: passwordVisibility,
       decoration: InputDecoration(
-          prefixIcon: const Icon(
-            Icons.key,
-            color: Colors.black,
-          ),
-          suffixIcon: IconButton(
-            icon: (passwordVisibility)
-                ? const Icon(Icons.visibility_off)
-                : const Icon(Icons.visibility),
-            onPressed: () {
-              setState(() {
-                passwordVisibility = !passwordVisibility;
-              });
-            },
-          ),
-          label: customText(string),
-          hintText: string,
-          // errorText: "error password",
-          border: const OutlineInputBorder()),
+        prefixIcon: const Icon(
+          Icons.password,
+          color: Colors.black,
+        ),
+        suffixIcon: IconButton(
+          icon: (passwordVisibility)
+              ? const Icon(Icons.visibility_off)
+              : const Icon(Icons.visibility),
+          onPressed: () {
+            setState(() {
+              passwordVisibility = !passwordVisibility;
+            });
+          },
+        ),
+        label: customText(string),
+        hintText: string,
+        // errorText: "error password",
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),),
       onSubmitted: (String value) {
         password = value;
       },

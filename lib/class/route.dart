@@ -1,10 +1,12 @@
 
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rentalapp/acceuil.dart';
 import 'package:rentalapp/initial.dart';
 import 'package:rentalapp/login.dart';
 import 'package:rentalapp/main.dart';
+import 'package:rentalapp/profit/editProfile.dart';
 import 'package:rentalapp/profit/uploadArticle.dart';
 import 'package:rentalapp/signIn.dart';
 import 'package:rentalapp/view/profit.dart';
@@ -51,7 +53,12 @@ class RouteApp extends StatelessWidget{
               builder: ((context, state)=> const MyApp())),
           GoRoute(
               path: "start",
-              builder: ((context, state)=> const Init()))
+              builder: ((context, state)=> const Init())),
+          GoRoute(
+              path: "EditProfil/:id",
+            builder: ((context, state)=> EditProfil(
+                id: state.pathParameters["id"]))
+          )
         ]
         ),
 

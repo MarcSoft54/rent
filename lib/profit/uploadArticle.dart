@@ -12,7 +12,7 @@ import '../json/article.dart';
 
 
 class UploadFile extends StatefulWidget{
-   var id;
+  var id;
   UploadFile({super.key, required this.id});
 
 
@@ -69,7 +69,7 @@ class _UploadFile extends State<UploadFile>{
 
   Future<void> postArticle(ArticleDto articleDto, int userIde) async{
     try{
-      Response response = await dio.post("http://localhost:9001/api/articles?userId=$userIde", data: articleDto.toJson());
+      Response response = await dio.post("http://localhost:9001/api/articles/$userIde", data: articleDto.toJson());
       if(response.statusCode == 200){
         print(response.data);
       }
@@ -85,6 +85,7 @@ class _UploadFile extends State<UploadFile>{
       if(result != null){
         setState(() {
           _controller = VideoPlayerController.file(File(result.path));
+
         });
       }
     }catch(e){
@@ -97,8 +98,8 @@ class _UploadFile extends State<UploadFile>{
       XFile? result = await picker.pickImage(source: ImageSource.gallery);
       setState(() {
         if(result != null){
-          pictures = result.path.toString();
-          images.add(pictures);
+          pictures = result.path;
+          images.add(pictures.toString());
           print(pictures);
         }
       });
@@ -128,7 +129,7 @@ class _UploadFile extends State<UploadFile>{
         child: SingleChildScrollView(
           padding: const EdgeInsets.only(left: 2, right: 2),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(
                 height: 250,
@@ -200,7 +201,7 @@ class _UploadFile extends State<UploadFile>{
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  customText("Select the types of\n you are house"),
+                  customText("types of house"),
                   SizedBox(
                     width: 200,
                     child: DropdownButtonFormField(
@@ -227,7 +228,59 @@ class _UploadFile extends State<UploadFile>{
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  customText("Please choose \nthe number of rooms"),
+                  customText("Price"),
+                  padding(left: 2),
+                  SizedBox(
+                    width: 200,
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              borderSide: BorderSide(width: 1, color: Colors.blue)
+                          ),
+                          border: OutlineInputBorder()
+                      ),
+                      onSubmitted: (string){
+                        setState(() {
+                          price = double.parse(string);
+                        });
+                      },
+                    ),
+                  )
+                ],
+              ),
+              padding(top: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  customText("Location"),
+                  padding(left: 2),
+                  SizedBox(
+                    width: 200,
+                    child: TextField(
+                      decoration: const InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              borderSide: BorderSide(width: 1, color: Colors.blue)
+                          ),
+                          border: OutlineInputBorder()
+                      ),
+                      onSubmitted: (string){
+                        setState(() {
+                          city = string;
+                        });
+                      },
+                    ),
+                  )
+                ],
+              ),
+              padding(top: 10),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  customText("rooms"),
                   SizedBox(
                     width: size*.2,
                     child: DropdownButtonFormField(
@@ -249,12 +302,11 @@ class _UploadFile extends State<UploadFile>{
                         }),
                   )
                 ],
-              ),
-              padding(top: 10),
+              ),padding(top: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  customText("Please choose \nthe number of showers"),
+                  customText("showers"),
                   SizedBox(
                     width: size*.2,
                     child: DropdownButtonFormField(
@@ -276,12 +328,11 @@ class _UploadFile extends State<UploadFile>{
                         }),
                   )
                 ],
-              ),
-              padding(top: 10),
+              ),padding(top: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  customText("Please choose \nthe number of kitchens"),
+                  customText("kitchens"),
                   SizedBox(
                     width: size*.2,
                     child: DropdownButtonFormField(
@@ -308,7 +359,7 @@ class _UploadFile extends State<UploadFile>{
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  customText("Please choose \nthe number of parking"),
+                  customText("parking"),
                   SizedBox(
                     width: size*.2,
                     child: DropdownButtonFormField(
@@ -335,9 +386,7 @@ class _UploadFile extends State<UploadFile>{
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Container(
-                    child: customText("Please choose \nthe number of livingRoom"),
-                  ),
+                  customText("livingRoom"),
                   SizedBox(
                     width: size*.2,
                     child: DropdownButtonFormField(
@@ -361,31 +410,8 @@ class _UploadFile extends State<UploadFile>{
                 ],
               ),
               padding(top: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  customText("Price:"),
-                  padding(left: 10),
-                  SizedBox(
-                    width: 200,
-                    child: TextField(
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                              borderSide: BorderSide(width: 1, color: Colors.blue)
-                          ),
-                        border: OutlineInputBorder()
-                      ),
-                      onSubmitted: (string){
-                        setState(() {
-                          price = double.parse(string);
-                        });
-                      },
-                    ),
-                  )
-                ],
-              ),
+
+
               const SizedBox(
                 height: 200,
               )

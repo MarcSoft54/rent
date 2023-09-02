@@ -1,9 +1,14 @@
 
+import 'package:animator/animator.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rentalapp/class/function.dart';
 import 'package:rentalapp/message/messageUpload.dart';
 import 'package:rentalapp/json/message.dart';
+
+import '../json/user.dart';
+import 'package:rentalapp/http/messageHttp.dart';
 
 class MessageView extends StatefulWidget{
   const MessageView({super.key});
@@ -15,19 +20,43 @@ class MessageView extends StatefulWidget{
 
 
 class _MessageView extends State<MessageView>{
-  List<Message> messageList = [];
 
-Message sms = Message(
-                      id: 1,
-                      content: "Marc William is the best",
-                      createAt: DateTime.now(),
-                      createBy: 1
-                  );
+  MessageService messageService = MessageService();
+
+
+  var messageList ;
+  Dio dio = Dio();
+  int id = 1;
+
+  User user = User(
+      id: 0,
+      username: '',
+      surname: '',
+      email: '',
+      sex: '',
+      country: '',
+      phoneNumber: 0);
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    messageList.add(sms);
+    getMessage();
+  }
+
+
+
+  getMessage() async{
+    try{
+      Response response = await dio.get("http://localhost:9001/api/messages/$id");
+      if(response.statusCode == 200){
+        setState(() {
+          messageList = response.data;
+        });
+      }
+    }catch(e){
+      print(e);
+    }
   }
 
   @override
@@ -45,70 +74,52 @@ Message sms = Message(
       ),
       body: GestureDetector(
         onTap: (() => FocusScope.of(context).requestFocus(FocusNode())),
-        child: (messageList.isEmpty)
-          ?  const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-              CircularProgressIndicator()
-            ],
-          ),
-        )
-            :ListView.builder(
+        child:
+        (messageList == null)
+            ?Center(
+            child: SizedBox(
+              height: 200,
+              width: 200,
+              child: Animator(
+                duration: const Duration(milliseconds: 1000),
+                cycles: 0,
+                curve: Curves.easeInOut,
+                tween: Tween(begin: 15.0,end: 25.0),
+                builder: (context, animatoState, child) =>
+                    customIcon(Icons.cabin_outlined,colors: Colors.blue,
+                        size: animatoState.value *5
+                    ),
+              ),
+            )
+        ):
+        ListView.builder(
             padding: const EdgeInsets.only(top: 10, left: 3, right: 3),
             itemCount: messageList.length,
-            itemBuilder: (context, index){
-              Message message = messageList[index];
+            itemBuilder: (context, index) {
+              Message message = Message.fromJson(messageList[index]);
+              var date = DateTime.parse(message.createAt);
+              getOneUser(message.createBy);
               return Column(
                 children: [
-                  InkWell(
+                  ListTile(
                     onTap: (){
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (BuildContext){
+                          MaterialPageRoute(builder: (BuildContext context){
                             return MessagePage(message);
                           }));
                     },
-                    child: SizedBox(
+                    leading: SizedBox(
                       height: 40,
-                      width: size,
-                      // padding: const EdgeInsets.only(right: 10),
-                      child: Row(
-                        children: [
-                          Container(
-                            height: 55,
-                            width: 45,
-                            decoration: const BoxDecoration(
-                              image: DecorationImage(
-                                  image: AssetImage("images/account-2.png")),
-                              borderRadius: BorderRadius.all(Radius.circular(50)),
-                              // color: Colors.blue
-                            ),
-                          ),
-                          padding(left: 8),
-                          Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      customText("${message.createBy}"),
-                                      padding(left: size*.4),
-                                      Container(
-                                        child: customText(DateFormat.yMMMMd().format(message.createAt), size: 14),
-                                      )
-                                    ],
-                                  ),
-                                  Expanded( // ******************************************* responsive
-                                      child: (message.content.length > size~/40)
-                                          ? customText("${message.content.substring(0,(size~/40))}...", size: 14)
-                                          : customText(message.content)
-                                  ),
-                                ],
-                              )),
-                        ],
+                      width: 40,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: const Image(
+                          image: AssetImage("images/account-2.png"),
+                        ),
                       ),
                     ),
+                    title: customText(user.username),
+                    trailing: customText(DateFormat.yMMMd().format(date)),
                   ),
                   Divider(
                     color: Colors.blueGrey[200],
@@ -122,4 +133,24 @@ Message sms = Message(
     );
   }
 
+
+
+  getOneUser(var id)async{
+    try{
+      Response response = await dio.get("http://localhost:9001/api/users/$id");
+      if(response.statusCode == 200){
+        setState(() {
+          user = User.fromJson(response.data);
+        });
+      }
+    }catch(e){
+      print(e);
+    }
+  }
+
 }
+
+//
+// (message.content.length > size~/40)
+// ? customText("${message.content.substring(0,(size~/40))}...", size: 14)
+// : customText(message.content)

@@ -10,6 +10,7 @@ class Log extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
           useMaterial3: true
@@ -40,7 +41,7 @@ class _LoginApp extends State<LoginApp> {
         body: GestureDetector(
             onTap: (() => FocusScope.of(context).requestFocus(FocusNode())),
             child: SingleChildScrollView(
-                padding:const EdgeInsets.only(left: 10, right: 10, top: 20),
+                padding:const EdgeInsets.only(left: 10, right: 10),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -52,75 +53,68 @@ class _LoginApp extends State<LoginApp> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  customText("Welcome to ", size: 30),
+                                  customText("Welcome to ", size: 25),
                                   customText("RentApp",
-                                      size: 40,
+                                      size: 35,
                                       fontSize: FontStyle.italic,
                                       color: Colors.blue)
                                 ],
                               ),
                             ),
-                            padding(top: 70),
+                            const SizedBox(height: 40),
                             Container(
-                                width: 300,
-                                height: 45,
+                                width: double.infinity,
+                                margin: const EdgeInsets.only(left: 60, right: 60),
+                                height: 50,
                                 alignment: Alignment.center,
                                 decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                                    borderRadius: BorderRadius.all(Radius.circular(5)),
                                     color: Colors.blue
                                 ),
                                 child:customText("login", color: Colors.white, size: 30)
                             ),
                           ]),
-                      padding(top: 40),
-                      Container(
-                        margin: const EdgeInsets.only(left: 25, right: 25),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              child: customText("Email or Phone number"),
-                            ),
-                            padding(top: 10),
-                            emailBox(),
-                            padding(top: 20),
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              child: customText("Enter the password"),
-                            ),
-                            padding(top: 10),
-                            passWordBox(),
-                            padding(top: 20),
-                            Container(
-                                alignment: Alignment.centerRight,
-                                child: TextButton(
-                                    onPressed: ()=>passForget(context),
-                                    child: customText("password forget",
-                                      color: Colors.blue
-                                    )),
-                            )
-                          ],
-                        ),
+                      const SizedBox(height: 40),
+                      Column(
+                        children: [
+                          SizedBox(
+                            height: 45,
+                            child: emailBox(),
+                          ),
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            height: 45,
+                            child: passWordBox(),
+                          ),
+                          const SizedBox(height: 10),
+                          Container(
+                              alignment: Alignment.centerRight,
+                              child: TextButton(
+                                  onPressed: ()=>passForget(context),
+                                  child: customText("password forget", color: Colors.blue
+                                  )),
+                          )
+                        ],
                       ),
-                      padding(top: 60),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            if (checkEmail(email)) {                         //*************** check email
-                              passForget(context);
-                            } else {
-                              setState(() {
-                                Navigator.pop;
-                              });
-                            }
-                          });
-                        },
-                        style: const ButtonStyle(
-                            maximumSize:MaterialStatePropertyAll(Size.fromWidth(300)),
-                            fixedSize: MaterialStatePropertyAll<Size>(Size.fromHeight(40)),
-                            backgroundColor: MaterialStatePropertyAll(Colors.blue)),
-                        child: customText("Sign In",color: Colors.white, size: 20),
+                      const SizedBox(height: 40),
+                      SizedBox(
+                        height: 45,
+                        width: 200,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              if (checkEmail(email)) {                         //*************** check email
+                                passForget(context);
+                              } else {
+                                setState(() {
+                                  Navigator.pop;
+                                });
+                              }
+                            });
+                          },
+                          style: customStyleButton(),
+                          child: customText("Sign In",color: Colors.white, size: 20),
+                        ),
                       ),
                       padding(top: 40),
                       Container(
@@ -129,7 +123,7 @@ class _LoginApp extends State<LoginApp> {
                               onPressed: (){
                                 GoRouter.of(context).push("/signIn");
                               },
-                              child: customText("create an account")),
+                              child: customText("create an account", color: Colors.red)),
                       ),
                     ])
             )));
@@ -161,7 +155,7 @@ class _LoginApp extends State<LoginApp> {
             : Container(
           width: 0,
         ),
-        border: const OutlineInputBorder(),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
       ),
       onSubmitted: (String value) => {email = value},
     );
@@ -187,7 +181,7 @@ class _LoginApp extends State<LoginApp> {
           ),
           label: const Text("Password"),
           hintText: "password",
-          border: const OutlineInputBorder()),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(100))),
       onSubmitted: (String value) {
         password = value;
       },
