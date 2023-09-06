@@ -8,7 +8,7 @@ import 'package:rentalapp/message/messageUpload.dart';
 import 'package:rentalapp/json/message.dart';
 
 import '../json/user.dart';
-import 'package:rentalapp/http/messageHttp.dart';
+import 'package:rentalapp/class/http/messageHttp.dart';
 
 class MessageView extends StatefulWidget{
   const MessageView({super.key});
@@ -31,7 +31,7 @@ class _MessageView extends State<MessageView>{
   User user = User(
       id: 0,
       username: '',
-      surname: '',
+      userPicture: '',
       email: '',
       sex: '',
       country: '',

@@ -1,5 +1,4 @@
 
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rentalapp/acceuil.dart';
@@ -29,13 +28,17 @@ class RouteApp extends StatelessWidget{
   }
 
   final GoRouter _router = GoRouter(
-
+    // initialLocation: '/first',
       routes: [
-        GoRoute(path: "/", builder: ((context, state)=> const Home()),
+        GoRoute(
+            path: "/",
+            builder: ((context, state)=> const Home()),
         routes: [
           GoRoute(
-              path: "profit",
-              builder: ((context, state)=> const Profit())),
+              path: "profit/:id",
+              builder: ((context, state)=> Profit(
+                id: state.pathParameters["id"],
+              ))),
           GoRoute(
               path: "login",
               builder: ((context, state)=>const Log())),

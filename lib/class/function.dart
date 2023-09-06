@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 Text customText(String data,
@@ -174,7 +175,7 @@ Future profitMessage(BuildContext context) {
       });
 }
 
-Future logOut(BuildContext context){
+logOut(BuildContext context){
   return showDialog(
       context: context,
       barrierDismissible: false,
@@ -252,11 +253,11 @@ InputDecoration buildInputDecoration(String name, IconData icon) {
       floatingLabelStyle: const TextStyle(
           color: Colors.blue),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(100),
+        borderRadius: BorderRadius.circular(12.0),
       ),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
       label: Text(name),
-      prefixIcon: Icon(icon)
+      prefixIcon: Icon(icon),
   );
 }
 
@@ -266,4 +267,9 @@ ButtonStyle customStyleButton() {
       side: BorderSide.none,
       shape: const StadiumBorder()
   );
+}
+
+get(String key) async{
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  int? current = await sharedPreferences.getInt(key);
 }

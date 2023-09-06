@@ -1,10 +1,16 @@
 
+import 'dart:developer';
+
 import 'package:animator/animator.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
+import 'package:rentalapp/identity/currentUser.dart';
+import 'package:rentalapp/json/token.dart';
 import 'package:rentalapp/json/user.dart';
 import 'package:rentalapp/login.dart';
+import 'package:rentalapp/class/http/userHttp.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'class/function.dart';
 
@@ -42,10 +48,12 @@ class _SignIn extends State<SignIn> {
   String? selectItem = "sex";
   bool b = false;
 
+  UserService userService = UserService();
+
   // *************************   Variables of the User
 
   String username = '';
-  String surname = '';
+  String userPicture = "images/account-2.png";
   String emailUser = '';
   String password_2 ='';
   int phoneNumber = 0;
@@ -61,7 +69,7 @@ class _SignIn extends State<SignIn> {
   Future<void> httpPostUser(UserDto user) async{
     try{
       Response response = await dio.post("http://localhost:9001/api/users",
-          data: user.toJon());
+          data: user.toJson());
       if(response.statusCode == 200){
         setState(() {
           messages = response.data;
@@ -124,23 +132,13 @@ class _SignIn extends State<SignIn> {
                       SizedBox(
                         height: 45,
                         child: TextField(
-                            onSubmitted: (val){
-                              setState(() {
-                                surname = val;
-                              });
-                            },
-                            decoration: buildInputDecoration("Surname", Icons.person)
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        height: 45,
-                        child: TextField(
                           controller: emailController,
                           keyboardType: TextInputType.emailAddress,
                           onSubmitted: (value) {
                             setState(() {
-                              emailUser = value;
+                              if(checkEmail(value)){
+                                emailUser = value;
+                              }
                             });
                           },
                           decoration: InputDecoration(
@@ -158,14 +156,14 @@ class _SignIn extends State<SignIn> {
                                 : Container(
                               width: 0,
                             ),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
                           ),
                         ),
                       ),
                       const SizedBox(height: 10),
                       SizedBox(
-                        height: 45,
-                        child: passWordBox("password")
+                          height: 45,
+                          child: passWordBox("password")
                       ),
                       const SizedBox(height: 20),
                       SizedBox(
@@ -189,7 +187,7 @@ class _SignIn extends State<SignIn> {
                             ),
                             label: customText("Enter back the same password"),
                             hintText: "password",
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),),
                           onSubmitted: (String value) {
                             setState(() {
                               password_2 = value;
@@ -219,21 +217,21 @@ class _SignIn extends State<SignIn> {
                           ),
                           padding(left: 1),
                           Expanded(
-                              child: SizedBox(
-                                height: 45,
-                                child: TextField(
-                                  keyboardType: TextInputType.number,
-                                  onSubmitted: (value){
-                                    setState(() {
-                                      phoneNumber = int.parse(value);
-                                    });
-                                  },
-                                  decoration: InputDecoration(
-                                    label: customText("Phone number"),
-                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
-                                  ),
+                            child: SizedBox(
+                              height: 45,
+                              child: TextField(
+                                keyboardType: TextInputType.number,
+                                onSubmitted: (value){
+                                  setState(() {
+                                    phoneNumber = int.parse(value);
+                                  });
+                                },
+                                decoration: InputDecoration(
+                                  label: customText("Phone number"),
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
                                 ),
-                              ),)
+                              ),
+                            ),)
                         ],),
                       const SizedBox(height: 50),
                       SizedBox(
@@ -241,28 +239,28 @@ class _SignIn extends State<SignIn> {
                         width: 150,
                         child: ElevatedButton(
                           onPressed: (){
+                            log("$username, $emailUser, $sex, $phoneNumber, $userPicture");
                             setState(() {
-                              // print(
-                              //     "$username, $surname, $emailUser, $password_2, $sex, $phoneNumber"
-                              // );
-                              // print("the message $messages");
-                              if(username.isNotEmpty && surname.isNotEmpty && emailUser.isNotEmpty
+                              if(username.isNotEmpty  && emailUser.isNotEmpty
                                   && sex.isNotEmpty && phoneNumber != 0
                               ){
                                 if(password != password_2){
                                   messages = "Different Pass";
                                 }else if(statusCode != null){
                                   showNoConnect(context);
-                                }else{
-                                  UserDto userDto = UserDto(
-                                      username,
-                                      surname,
-                                      emailUser,
-                                      password_2,
-                                      sex,
-                                      phoneNumber,
-                                      country);
-                                  httpPostUser(userDto);
+                                }else {
+                                  {
+                                    UserDto userDto = UserDto(
+                                        username,
+                                        userPicture,
+                                        emailUser,
+                                        password_2,
+                                        sex,
+                                        phoneNumber,
+                                        country);
+                                    httpPostUser(userDto);
+                                   context.go("/");
+                                  }
                                 }
                               }else{
                                 b = !b;
@@ -326,7 +324,7 @@ class _SignIn extends State<SignIn> {
         label: customText(string),
         hintText: string,
         // errorText: "error password",
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),),
       onSubmitted: (String value) {
         password = value;
       },

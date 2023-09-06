@@ -28,7 +28,7 @@ class _MessagePage extends State<MessagePage>{
   User user = User(
     id: 0,
     username: "",
-    surname: "",
+    userPicture: "",
     email: "",
     sex: "",
     country: "",

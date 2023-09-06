@@ -33,7 +33,7 @@ class _SubscriberPage extends State<SubscribePage>{
   User user = User(
       id: 1,
       username: "Marc",
-      surname: "dev",
+      userPicture: "dev",
       email: "marcdev@dev.com",
       sex: "male",
       country: "Cameroon",
@@ -100,7 +100,7 @@ class _SubscriberPage extends State<SubscribePage>{
                                 children: [
                                   Row(
                                     children: [
-                                      customText("${user1.username} ${user1.surname}"),
+                                      customText("${user1.username} ${user1.userPicture}"),
                                     ],
                                   ),
                                   // Row(

@@ -1,6 +1,8 @@
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rentalapp/signIn.dart';
+import 'package:rentalapp/class/http/userHttp.dart';
+import 'package:rentalapp/json/token.dart';
 
 import 'class/function.dart';
 
@@ -32,6 +34,8 @@ class _LoginApp extends State<LoginApp> {
   bool passwordVisibility = true;
   var password;
   var email = "marcdev45@gmail.com";
+  bool status = false;
+  UserService service = UserService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,7 +72,7 @@ class _LoginApp extends State<LoginApp> {
                                 height: 50,
                                 alignment: Alignment.center,
                                 decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
                                     color: Colors.blue
                                 ),
                                 child:customText("login", color: Colors.white, size: 30)
@@ -103,13 +107,18 @@ class _LoginApp extends State<LoginApp> {
                         child: ElevatedButton(
                           onPressed: () {
                             setState(() {
-                              if (checkEmail(email)) {                         //*************** check email
-                                passForget(context);
-                              } else {
                                 setState(() {
-                                  Navigator.pop;
+                                  service.getUserId(email, password).then((value){
+                                    if(value == null){
+                                      status = !status;
+                                    }else{
+                                      Token token = value;
+                                      context.go("/profit/${token.id}");
+                                    }
+                                  });
+
                                 });
-                              }
+
                             });
                           },
                           style: customStyleButton(),
@@ -117,6 +126,9 @@ class _LoginApp extends State<LoginApp> {
                         ),
                       ),
                       padding(top: 40),
+                      Container(
+                        child: (status)? customText("not exit"):customText("Welcome"),
+                      ),
                       Container(
                         alignment: Alignment.centerRight,
                           child: TextButton(
@@ -155,7 +167,7 @@ class _LoginApp extends State<LoginApp> {
             : Container(
           width: 0,
         ),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
       ),
       onSubmitted: (String value) => {email = value},
     );
@@ -181,7 +193,7 @@ class _LoginApp extends State<LoginApp> {
           ),
           label: const Text("Password"),
           hintText: "password",
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(100))),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0))),
       onSubmitted: (String value) {
         password = value;
       },

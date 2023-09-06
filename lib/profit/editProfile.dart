@@ -1,14 +1,18 @@
 
+
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:rentalapp/class/function.dart';
+import 'package:rentalapp/class/http/userHttp.dart';
+import 'package:rentalapp/json/user.dart';
 
 class EditProfil extends StatelessWidget{
 
   EditProfil({super.key, required this.id});
 
   var id;
-
   @override
   Widget build(BuildContext context){
     return MaterialApp(
@@ -16,14 +20,16 @@ class EditProfil extends StatelessWidget{
       theme: ThemeData(
           useMaterial3: true
       ),
-      home: _EditProfil(id),
+      home: _EditProfil(userId: id,),
     );
   }
 }
 
 class _EditProfil extends StatefulWidget{
-  const _EditProfil(id);
 
+   _EditProfil({required this.userId});
+
+  var userId ;
 
   @override
   State<_EditProfil> createState() => _Edit();
@@ -31,6 +37,27 @@ class _EditProfil extends StatefulWidget{
 }
 
 class _Edit extends State<_EditProfil> {
+
+  UserService userService = UserService();
+  var userPicture;
+  var username;
+  var email;
+  var password;
+  var country;
+  var phone;
+  User user = User(
+    id: 0,
+    username: '',
+    userPicture: '',
+    email: '',
+    sex: '',
+    country: '',
+    phoneNumber: 0
+  );
+
+
+  bool visibility = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +75,12 @@ class _Edit extends State<_EditProfil> {
                   SizedBox(
                     width: 120, height: 120,
                     child: ClipRRect(borderRadius: BorderRadius.circular(100),
-                        child: const Image(
-                          image: AssetImage("images/account-2.png"),)),
+                        child: (userPicture ==null)
+                            ?const Image(
+                          image: AssetImage("images/account-2.png"),)
+                            :Image(
+                          image: FileImage(File(userPicture)),fit: BoxFit.cover,
+                        )),
                   ),
                   Positioned(
                       bottom: 0,
@@ -57,7 +88,11 @@ class _Edit extends State<_EditProfil> {
                       child: PencilModify(
                         icon: LineAwesomeIcons.camera,
                         onPress: () {
-                          profitMessage(context);
+                          setState(() {
+                            userService.getPicture().then((value){
+                              userPicture = value;
+                            }).then((value)=>setState(()=>userPicture));
+                          });
                         },
                       )
                   )
@@ -69,27 +104,73 @@ class _Edit extends State<_EditProfil> {
                       const SizedBox(height: 20),
                       TextFormField(
                           decoration: buildInputDecoration(
-                              "Username", Icons.person_outline)
+                              "Username", Icons.person_outline),
+                        onChanged: ((value){
+                          username = value;
+                        }),
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
+                        keyboardType: TextInputType.emailAddress,
                           decoration: buildInputDecoration(
-                              "E-mail", Icons.email_outlined)
+                              "E-mail", Icons.email_outlined),
+                        onFieldSubmitted: ((value){
+                          setState(() {
+                            if(checkEmail(value)){
+                              email = value;
+                            }else{
+                              email = "";
+                            }
+                          });
+                        }),
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
+                        keyboardType: TextInputType.text,
+                          obscureText: visibility,
+                          decoration: InputDecoration(
+                            floatingLabelStyle: const TextStyle(
+                                color: Colors.blue),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                            label: const Text("password"),
+                            prefixIcon: const Icon(Icons.password),
+                              suffixIcon: IconButton(
+                                icon: (visibility)? const Icon(Icons.visibility_off):const Icon(Icons.visibility),
+                                onPressed: (){
+                                  setState(() {
+                                    visibility = !visibility;
+                                  });
+                                },
+                              )
+                          ),
+                        onFieldSubmitted: ((value){
+                          setState(() {
+                            password = value;
+                          });
+                        }),
+                      ),
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        keyboardType: TextInputType.text,
                           decoration: buildInputDecoration(
-                              "Password", Icons.password)
+                              "Country", Icons.flag),
+                        onFieldSubmitted: ((value){
+                          setState(() {
+                            country = value;
+                          });
+                        }),
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
-                          decoration: buildInputDecoration(
-                              "Country", Icons.flag)
-                      ),
-                      const SizedBox(height: 20),
-                      TextFormField(
+                        keyboardType: TextInputType.number,
                         decoration: buildInputDecoration(
                             "Phone number", Icons.phone),
+                        onFieldSubmitted: ((value){
+                          phone = value;
+                        }),
                       ),
                       const SizedBox(height: 70),
                       SizedBox(
@@ -97,7 +178,20 @@ class _Edit extends State<_EditProfil> {
                         height: 50,
                         child: ElevatedButton(
                             onPressed: (){
-
+                              setState(() {
+                                userService.getOneUser(widget.userId).then((value){
+                                  user = value;
+                                });
+                              });
+                              UserDto user1 = UserDto(
+                                  username,
+                                  userPicture,
+                                  email,
+                                  password,
+                                  user.sex,
+                                  phone,
+                                  country);
+                              userService.putUser(user1, widget.userId);
                             },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue,
@@ -112,7 +206,7 @@ class _Edit extends State<_EditProfil> {
                         alignment: Alignment.bottomRight,
                         child:   ElevatedButton(
                             onPressed: (){
-
+                              userService.delUser(widget.userId);
                             },
                             child: const Text("Delete Account", style: TextStyle(color: Colors.red),)
                         ),

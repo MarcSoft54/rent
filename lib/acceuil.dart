@@ -5,10 +5,6 @@ import 'package:rentalapp/view/profit.dart';
 import 'package:rentalapp/view/subscribe.dart';
 
 
-// void main() {
-//   runApp(const Home());
-// }
-
 class Home extends StatelessWidget {
   const Home({super.key});
 
@@ -35,13 +31,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
 
   int currentPage = 0;
   @override
@@ -77,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
         const ArticleView(),
         const Subscriber(),
         const MessageView(),
-        const Profit()
+         Profit(id: null)
       ][currentPage]
     );
 

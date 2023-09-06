@@ -1,16 +1,18 @@
+
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:rentalapp/class/function.dart';
-import 'package:rentalapp/http/userHttp.dart';
+import 'package:rentalapp/class/http/userHttp.dart';
 
-import '../json/user.dart';
 
 
 class Profit extends StatelessWidget{
-  const Profit({super.key});
+  var id;
+  Profit({super.key, required this.id});
 
 
   @override
@@ -21,14 +23,15 @@ class Profit extends StatelessWidget{
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const ProfitPage(),
+      home: ProfitPage(id:id),
     );
   }
 
 }
 
 class ProfitPage extends StatefulWidget{
-  const ProfitPage({super.key});
+  var id;
+   ProfitPage({super.key, required this.id});
   @override
   State<StatefulWidget> createState() => _ProfitPage();
 }
@@ -43,15 +46,14 @@ class _ProfitPage extends State<ProfitPage>{
   var userJson;
   var user;
   String profitPath = '';
-  ImagePicker imagePicker = ImagePicker();
-  int id = 1;
+
 
   UserService userService = UserService();
 
   @override
   void initState() {
     super.initState();
-    userService.getOneUser(id).then((value){
+    userService.getOneUser(widget.id).then((value){
       setState(() {
         user = value;
       });
@@ -59,11 +61,6 @@ class _ProfitPage extends State<ProfitPage>{
   }
 
 
-
-  Future getProfitImage() async{
-    XFile? image = await imagePicker.pickImage(source: ImageSource.gallery);
-    profitPath = image!.path.toString();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +75,7 @@ class _ProfitPage extends State<ProfitPage>{
         onTap:() => FocusScope.of(context).requestFocus(FocusNode()),
         child: SingleChildScrollView(
             padding: const EdgeInsets.only(left: 5, right: 5, top: 25),
-            child: user != User?
+            child: user == null?
             connectionSession() :
             Container(
               padding: const EdgeInsets.all(12),
@@ -89,7 +86,13 @@ class _ProfitPage extends State<ProfitPage>{
                       SizedBox(
                         width: 120, height: 120,
                         child: ClipRRect(borderRadius: BorderRadius.circular(100),
-                            child :const Image(image: AssetImage("images/account-2.png"),)),
+                            child : (user.userPicture == null)
+                                ?const Image(
+                              image: AssetImage("images/account-2.png"),)
+                                :Image(
+                              image: FileImage(File(user.userPicture)),fit: BoxFit.cover,
+                            )
+                        ),
                       ),
                       Positioned(
                           bottom: 0,
