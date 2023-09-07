@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:rentalapp/view/article.dart';
 import 'package:rentalapp/view/message.dart';
@@ -6,7 +8,8 @@ import 'package:rentalapp/view/subscribe.dart';
 
 
 class Home extends StatelessWidget {
-  const Home({super.key});
+  final id;
+  const Home({super.key, required this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +20,14 @@ class Home extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: "RentApp"),
+      home:MyHomePage(id: id),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
+  final id;
+  const MyHomePage({super.key, required this.id});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -33,6 +36,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   int currentPage = 0;
+  String idUser = "id";
+  var currentUser;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,9 +55,9 @@ class _MyHomePageState extends State<MyHomePage> {
               icon: Icon(Icons.home),
               label: "home"),
           NavigationDestination(
-            selectedIcon: Icon(Icons.groups),
-              icon: Icon(Icons.group),
-              label: "subscribe"),
+            selectedIcon: Icon(Icons.language),
+              icon: Icon(Icons.language),
+              label: "explore"),
           NavigationDestination(
               selectedIcon: Icon(Icons.question_answer_outlined),
               icon: Icon(Icons.question_answer_sharp),
@@ -59,14 +65,14 @@ class _MyHomePageState extends State<MyHomePage> {
           NavigationDestination(
               selectedIcon: Icon(Icons.perm_identity),
               icon: Icon(Icons.person),
-              label: "profile"),
+              label: "me"),
         ],
       ),
       body:<Widget> [
-        const ArticleView(),
-        const Subscriber(),
-        const MessageView(),
-         Profit(id: null)
+        ArticleView(id: widget.id),
+        Subscriber(id: widget.id),
+        MessageView(id: widget.id),
+         Profit(id: widget.id)
       ][currentPage]
     );
 

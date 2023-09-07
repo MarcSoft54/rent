@@ -11,7 +11,8 @@ import '../json/user.dart';
 import 'package:rentalapp/class/http/messageHttp.dart';
 
 class MessageView extends StatefulWidget{
-  const MessageView({super.key});
+  const MessageView({super.key, required this.id});
+  final id;
 
   @override
   State<MessageView> createState()=> _MessageView();
@@ -26,7 +27,6 @@ class _MessageView extends State<MessageView>{
 
   var messageList ;
   Dio dio = Dio();
-  int id = 1;
 
   User user = User(
       id: 0,
@@ -45,10 +45,9 @@ class _MessageView extends State<MessageView>{
   }
 
 
-
   getMessage() async{
     try{
-      Response response = await dio.get("http://localhost:9001/api/messages/$id");
+      Response response = await dio.get("http://localhost:9001/api/messages/${widget.id}");
       if(response.statusCode == 200){
         setState(() {
           messageList = response.data;

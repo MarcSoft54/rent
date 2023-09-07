@@ -16,9 +16,9 @@ class UserService{
 
   getOneUser(var id) async{
     try{
-      Response response = await dio.get("http://localhost:9001/api/users/1");
+      Response response = await dio.get("http://localhost:9001/api/users/$id");
       if(response.statusCode == 200){
-        log("${response.headers["set-cookie"]}");
+        log("${response.data}");
        return user = User.fromJson(response.data);
       }
     }catch(e){
@@ -68,13 +68,13 @@ class UserService{
   getUserId(String email, String password) async{
     try{
       Response response = await dio.get("http://localhost:9001/api/users/login?email=$email&password=$password");
-      log("${response.headers}");
-      if(response.statusCode == 200){
 
+      if(response.statusCode == 200){
+        log("${response.data}");
         return Token.fromJson(response.data);
       }
     }catch(e){
-      log("error $e");
+      log("error get : --> $e");
     }
   }
 

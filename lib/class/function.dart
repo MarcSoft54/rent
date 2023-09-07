@@ -56,7 +56,7 @@ Widget buildImage(String urlImage, int index){
 showNoConnect(BuildContext context){
   return showDialog(
       context: context,
-      builder: (BuildContext context){
+      builder: (context){
         return SimpleDialog(
           children: [
             Column(
@@ -175,7 +175,7 @@ Future profitMessage(BuildContext context) {
       });
 }
 
-logOut(BuildContext context){
+logOut(BuildContext context, VoidCallback onPress){
   return showDialog(
       context: context,
       barrierDismissible: false,
@@ -202,7 +202,7 @@ logOut(BuildContext context){
           contentPadding:const EdgeInsets.all(12),
           actions: [
             ElevatedButton(               // log out Option
-              onPressed: null,
+              onPressed: onPress,
               style: const ButtonStyle(
                   backgroundColor: MaterialStatePropertyAll(Colors.blue)
               ),
@@ -269,7 +269,3 @@ ButtonStyle customStyleButton() {
   );
 }
 
-get(String key) async{
-  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  int? current = await sharedPreferences.getInt(key);
-}

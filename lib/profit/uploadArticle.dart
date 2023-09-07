@@ -12,8 +12,8 @@ import '../json/article.dart';
 
 
 class UploadFile extends StatefulWidget{
-  var id;
-  UploadFile({super.key, required this.id});
+  final id;
+  const UploadFile({super.key, required this.id});
 
 
   @override
@@ -64,8 +64,6 @@ class _UploadFile extends State<UploadFile>{
   }
 
   ImagePicker picker = ImagePicker();
-
-
 
   Future<void> postArticle(ArticleDto articleDto, int userIde) async{
     try{
@@ -205,12 +203,7 @@ class _UploadFile extends State<UploadFile>{
                   SizedBox(
                     width: 200,
                     child: DropdownButtonFormField(
-                        decoration: const InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(10)),
-                                borderSide: BorderSide(width: 1, color: Colors.blue)
-                            )
-                        ),
+                        decoration: buildInputDecoration(),
                         value: selectType,
                         items: types
                             .map((select) => DropdownMenuItem<String>(
@@ -254,11 +247,13 @@ class _UploadFile extends State<UploadFile>{
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  customText("Location"),
-                  padding(left: 2),
+                  customText("Country and locality"),
                   SizedBox(
                     width: 200,
                     child: TextField(
+                      minLines: 1,
+                      maxLines: 2,
+                      maxLength: 70,
                       decoration: const InputDecoration(
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -284,12 +279,7 @@ class _UploadFile extends State<UploadFile>{
                   SizedBox(
                     width: size*.2,
                     child: DropdownButtonFormField(
-                        decoration: const InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(10)),
-                                borderSide: BorderSide(width: 1, color: Colors.blue)
-                            )
-                        ),
+                        decoration: buildInputDecoration(),
                         value: selectRoom,
                         items: rooms
                             .map((select) => DropdownMenuItem(
@@ -310,12 +300,7 @@ class _UploadFile extends State<UploadFile>{
                   SizedBox(
                     width: size*.2,
                     child: DropdownButtonFormField(
-                        decoration: const InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(10)),
-                                borderSide: BorderSide(width: 1, color: Colors.blue)
-                            )
-                        ),
+                        decoration: buildInputDecoration(),
                         value: selectShowers,
                         items: showers
                             .map((select) => DropdownMenuItem(
@@ -336,12 +321,7 @@ class _UploadFile extends State<UploadFile>{
                   SizedBox(
                     width: size*.2,
                     child: DropdownButtonFormField(
-                        decoration: const InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(10)),
-                                borderSide: BorderSide(width: 1, color: Colors.blue)
-                            )
-                        ),
+                        decoration: buildInputDecoration(),
                         value: selectKitchen,
                         items: kitchen
                             .map((select) => DropdownMenuItem(
@@ -363,12 +343,7 @@ class _UploadFile extends State<UploadFile>{
                   SizedBox(
                     width: size*.2,
                     child: DropdownButtonFormField(
-                        decoration: const InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(10)),
-                                borderSide: BorderSide(width: 1, color: Colors.blue)
-                            )
-                        ),
+                        decoration: buildInputDecoration(),
                         value: selectParking,
                         items: parking
                             .map((select) => DropdownMenuItem(
@@ -390,12 +365,7 @@ class _UploadFile extends State<UploadFile>{
                   SizedBox(
                     width: size*.2,
                     child: DropdownButtonFormField(
-                        decoration: const InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(10)),
-                                borderSide: BorderSide(width: 1, color: Colors.blue)
-                            )
-                        ),
+                        decoration: buildInputDecoration(),
                         value: selectLivingRoom,
                         items: livingRoom
                             .map((select) => DropdownMenuItem(
@@ -410,7 +380,6 @@ class _UploadFile extends State<UploadFile>{
                 ],
               ),
               padding(top: 20),
-
 
               const SizedBox(
                 height: 200,
@@ -432,6 +401,15 @@ class _UploadFile extends State<UploadFile>{
       //   ),
       // ),
     );
+  }
+
+  InputDecoration buildInputDecoration() {
+    return const InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              borderSide: BorderSide(width: 1, color: Colors.blue)
+                          )
+                      );
   }
 
 

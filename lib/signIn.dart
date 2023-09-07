@@ -5,12 +5,12 @@ import 'package:animator/animator.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rentalapp/identity/currentUser.dart';
+import 'package:rentalapp/acceuil.dart';
 import 'package:rentalapp/json/token.dart';
 import 'package:rentalapp/json/user.dart';
 import 'package:rentalapp/login.dart';
 import 'package:rentalapp/class/http/userHttp.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:rentalapp/view/profit.dart';
 
 import 'class/function.dart';
 
@@ -53,17 +53,18 @@ class _SignIn extends State<SignIn> {
   // *************************   Variables of the User
 
   String username = '';
-  String userPicture = "images/account-2.png";
+  String userPicture = '';
   String emailUser = '';
   String password_2 ='';
   int phoneNumber = 0;
   String country = '';
-  String sex = "";
+  String sex = '';
 
   // *********************** end *******************
 
   String messages = '';
   var statusCode ;
+
 
 
   Future<void> httpPostUser(UserDto user) async{
@@ -105,7 +106,7 @@ class _SignIn extends State<SignIn> {
                         curve: Curves.easeInOut,
                         tween: Tween(begin: 15.0,end: 25.0),
                         builder: (context, animatoState, child) =>
-                            customIcon(Icons.cabin_outlined,colors: Colors.blue,
+                            customIcon(Icons.cabin_outlined,colors: context.theme.primaryColor,
                                 size: animatoState.value *4
                             ),
                       ),
@@ -144,7 +145,7 @@ class _SignIn extends State<SignIn> {
                           decoration: InputDecoration(
                             label: customText("Email"),
                             hintText: "marcdev@gmail.com",
-                            prefixIcon: const Icon(Icons.email_outlined,color: Colors.red),
+                            prefixIcon: Icon(Icons.email_outlined,color: context.theme.primaryColor),
                             suffixIcon: emailController.text.isNotEmpty
                                 ? IconButton(
                                 icon: customIcon(Icons.close),
@@ -259,7 +260,7 @@ class _SignIn extends State<SignIn> {
                                         phoneNumber,
                                         country);
                                     httpPostUser(userDto);
-                                   context.go("/");
+                                    context.go("/login");
                                   }
                                 }
                               }else{
@@ -268,7 +269,7 @@ class _SignIn extends State<SignIn> {
                             });
                           },                            // ************ Submit ***********
                           style: customStyleButton(),
-                          child: customText("connexion", size: 22, color: Colors.white),
+                          child: customText("Register", size: 22, color: Colors.white),
                         ),
                       ),
                       const SizedBox(height: 5),
@@ -283,12 +284,10 @@ class _SignIn extends State<SignIn> {
                           TextButton(
                               onPressed: (){
                                 setState(() {
-                                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext){
-                                    return const LoginApp();
-                                  }));
+                                  context.go("/login");
                                 });
                               },
-                              child: customText("login here", color: Colors.red[500]))
+                              child: customText("login here", color: context.theme.primaryColor))
                         ],
                       )
                     ]

@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rentalapp/acceuil.dart';
 import 'package:rentalapp/class/http/userHttp.dart';
 import 'package:rentalapp/json/token.dart';
 
@@ -113,7 +114,7 @@ class _LoginApp extends State<LoginApp> {
                                       status = !status;
                                     }else{
                                       Token token = value;
-                                      context.go("/profit/${token.id}");
+                                      context.go("/home/${token.id}");
                                     }
                                   });
 

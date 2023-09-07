@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:rentalapp/class/function.dart';
 
 class ArticleView extends StatefulWidget{
-  const ArticleView({super.key});
-
+  ArticleView({super.key, required this.id});
+  var id;
   @override
   State<ArticleView> createState() => _ArticlePage();
   

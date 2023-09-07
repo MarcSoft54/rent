@@ -1,18 +1,20 @@
 
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:rentalapp/acceuil.dart';
 import 'package:rentalapp/class/function.dart';
 import 'package:rentalapp/class/http/userHttp.dart';
 
 
 
 class Profit extends StatelessWidget{
-  var id;
-  Profit({super.key, required this.id});
+  final id;
+  const Profit({super.key, required this.id});
 
 
   @override
@@ -29,34 +31,36 @@ class Profit extends StatelessWidget{
 
 }
 
+extension BuildContextExtenssions on BuildContext {
+  ThemeData get theme => Theme.of(this);
+}
+
 class ProfitPage extends StatefulWidget{
-  var id;
-   ProfitPage({super.key, required this.id});
+  final id;
+   const ProfitPage({super.key, required this.id});
   @override
   State<StatefulWidget> createState() => _ProfitPage();
 }
 
 class _ProfitPage extends State<ProfitPage>{
 
-
-
   Dio dio = Dio();
-
 
   var userJson;
   var user;
   String profitPath = '';
-
 
   UserService userService = UserService();
 
   @override
   void initState() {
     super.initState();
+    log("Profile : ${widget.id}");
     userService.getOneUser(widget.id).then((value){
-      setState(() {
-        user = value;
-      });
+        setState(() {
+          user = value;
+          log("user $user");
+        });
     });
   }
 
@@ -67,8 +71,7 @@ class _ProfitPage extends State<ProfitPage>{
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Profile", style: Theme.of(context).textTheme.headline4,),
-
+        title: Text("Profile", style: Theme.of(context).textTheme.headlineLarge,),
       ),
 
       body: GestureDetector(
@@ -86,7 +89,7 @@ class _ProfitPage extends State<ProfitPage>{
                       SizedBox(
                         width: 120, height: 120,
                         child: ClipRRect(borderRadius: BorderRadius.circular(100),
-                            child : (user.userPicture == null)
+                            child : (user.userPicture == '')
                                 ?const Image(
                               image: AssetImage("images/account-2.png"),)
                                 :Image(
@@ -108,22 +111,22 @@ class _ProfitPage extends State<ProfitPage>{
                   ),
                   const SizedBox(height: 10,),
                   Text(user.username,
-                    style: Theme.of(context).textTheme.headline4,),
+                    style: Theme.of(context).textTheme.titleLarge,),
                   Text(user.email,
-                    style: Theme.of(context).textTheme.headline4,
-                    textScaleFactor: .6,),
+                    style: Theme.of(context).textTheme.titleLarge,
+                    textScaleFactor: .7,),
                   const SizedBox(height: 20,),
                   SizedBox(
                     width: 250,
                     height: 40,
                     child: ElevatedButton(
                       onPressed: (){
-                        GoRouter.of(context).go("/EditProfil/${user.id}");
+                        GoRouter.of(context).go("/edit_profile/${user.id}");
                       },
                       style: customStyleButton(),
                       child: Text("Edit Profile",
-                        style: Theme.of(context).textTheme.headline4,
-                        textScaleFactor: .6,),
+                        style: Theme.of(context).textTheme.titleLarge,
+                        textScaleFactor: .9,),
                     ),
                   ),
                   const SizedBox(height: 20,),
@@ -144,10 +147,12 @@ class _ProfitPage extends State<ProfitPage>{
                   ProfileSetting(
                     title: "Logout",
                     icon: LineAwesomeIcons.alternate_sign_out,
-                    textColor: Colors.red,
+                    textColor: context.theme.primaryColorDark,
                     endIcon: false,
                     onPress: (){
-                      logOut(context);
+                      logOut(context, (){
+                        context.go("/");
+                      });
                     },
                   ),
                 ],
@@ -187,7 +192,7 @@ class _ProfitPage extends State<ProfitPage>{
                 width: 340,
                 child: ElevatedButton(
                     onPressed: (){
-                      context.go("/login");
+                      GoRouter.of(context).go("/login");
                     },
                     style:customStyleButton(),
                     child: customText("login", size: 25, color: Colors.white)
@@ -199,7 +204,7 @@ class _ProfitPage extends State<ProfitPage>{
                 alignment: Alignment.bottomRight,
                 child: TextButton(
                   onPressed: (){
-                    GoRouter.of(context).go("/signIn");
+                    GoRouter.of(context).go("/sign_in");
                   },
                   child: customText("create Account", color: Colors.blue),
                 ),

@@ -5,7 +5,8 @@ import 'package:rentalapp/json/user.dart';
 import 'package:rentalapp/profit/articleCollection.dart';
 
 class Subscriber extends StatelessWidget{
-  const Subscriber({super.key});
+  const Subscriber({super.key, required this.id});
+  final id;
 
   @override
   Widget build(BuildContext context){
@@ -14,14 +15,15 @@ class Subscriber extends StatelessWidget{
       theme: ThemeData(
           useMaterial3: true
       ),
-      home: const SubscribePage(),
+      home: SubscribePage(id: id),
     );
   }
 }
 
 
 class SubscribePage extends StatefulWidget{
-  const SubscribePage({super.key});
+  final id;
+  const SubscribePage({super.key, required this.id});
 
   @override
   State<SubscribePage> createState() => _SubscriberPage();

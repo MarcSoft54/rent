@@ -1,12 +1,16 @@
 
 
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:rentalapp/acceuil.dart';
 import 'package:rentalapp/class/function.dart';
 import 'package:rentalapp/class/http/userHttp.dart';
 import 'package:rentalapp/json/user.dart';
+import 'package:rentalapp/view/profit.dart';
 
 class EditProfil extends StatelessWidget{
 
@@ -45,15 +49,27 @@ class _Edit extends State<_EditProfil> {
   var password;
   var country;
   var phone;
+
   User user = User(
-    id: 0,
-    username: '',
-    userPicture: '',
-    email: '',
-    sex: '',
-    country: '',
-    phoneNumber: 0
+      id: 0,
+      username: '',
+      userPicture: '',
+      email: '',
+      sex: '',
+      country: '',
+      phoneNumber: 0
   );
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    userService.getOneUser(widget.userId).then((value){
+      setState(() {
+        user = value;
+      });
+    });
+  }
 
 
   bool visibility = false;
@@ -119,7 +135,7 @@ class _Edit extends State<_EditProfil> {
                             if(checkEmail(value)){
                               email = value;
                             }else{
-                              email = "";
+                              email = user.email;
                             }
                           });
                         }),
@@ -129,8 +145,8 @@ class _Edit extends State<_EditProfil> {
                         keyboardType: TextInputType.text,
                           obscureText: visibility,
                           decoration: InputDecoration(
-                            floatingLabelStyle: const TextStyle(
-                                color: Colors.blue),
+                            floatingLabelStyle: TextStyle(
+                                color: context.theme.primaryColor),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(100),
                             ),
@@ -189,15 +205,22 @@ class _Edit extends State<_EditProfil> {
                                   email,
                                   password,
                                   user.sex,
-                                  phone,
+                                  int.parse(phone),
                                   country);
-                              userService.putUser(user1, widget.userId);
+                              userService.putUser(user1, int.parse(widget.userId)).then((value){
+                                  setState(() {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context){
+                                      return Home(id: widget.userId);
+                                    }));
+                                  });
+                              });
+
                             },
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
+                                backgroundColor: context.theme.primaryColorDark,
                                 side: BorderSide.none,
                                 shape: const StadiumBorder()),
-                            child: Text("Edit Profile", style: Theme.of(context).textTheme.headline4,
+                            child: Text("Edit Profile", style: Theme.of(context).textTheme.headlineLarge,
                               textScaleFactor: .7,)
                         ),
                       ),
@@ -207,6 +230,9 @@ class _Edit extends State<_EditProfil> {
                         child:   ElevatedButton(
                             onPressed: (){
                               userService.delUser(widget.userId);
+                              Navigator.push(context, MaterialPageRoute(builder: (context){
+                                return const Home(id: null);
+                              }));
                             },
                             child: const Text("Delete Account", style: TextStyle(color: Colors.red),)
                         ),
