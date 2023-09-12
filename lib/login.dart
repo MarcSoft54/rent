@@ -1,9 +1,15 @@
 
+import 'dart:developer';
+
+import 'package:flutter/animation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rentalapp/acceuil.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:rentalapp/class/http/userHttp.dart';
 import 'package:rentalapp/json/token.dart';
+import 'package:rentalapp/view/profit.dart';
 
 import 'class/function.dart';
 
@@ -30,7 +36,8 @@ class LoginApp extends StatefulWidget {
   State<LoginApp> createState() => _LoginApp();
 }
 
-class _LoginApp extends State<LoginApp> {
+class _LoginApp extends State<LoginApp> with SingleTickerProviderStateMixin{
+
   final emailController = TextEditingController();
   bool passwordVisibility = true;
   var password;
@@ -40,108 +47,82 @@ class _LoginApp extends State<LoginApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-
-        ),
         body: GestureDetector(
             onTap: (() => FocusScope.of(context).requestFocus(FocusNode())),
-            child: SingleChildScrollView(
-                padding:const EdgeInsets.only(left: 10, right: 10),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        colors: [
+                          Colors.greenAccent.withOpacity(.5),
+                          context.theme.primaryColorDark.withOpacity(.5)
+                        ]
+                    )
+                ),
+                child:
+                SingleChildScrollView(
+                  padding: const EdgeInsets.only(left: 40, right: 40, top: 100),
+                  child: Column(
+                      children: [
+                        SizedBox(
+                          height: 40,
+                          child: Icon(Icons.cabin_outlined, size: 100,color: context.theme.primaryColorDark,),
+                        ),
+                        const SizedBox(height: 100),
+                        Column(
                           children: [
+                            emailBox(),
+                            const SizedBox(height: 20),
+                            passWordBox(),
+                            const SizedBox(height: 10),
                             Container(
-                              alignment: Alignment.center,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  customText("Welcome to ", size: 25),
-                                  customText("RentApp",
-                                      size: 35,
-                                      fontSize: FontStyle.italic,
-                                      color: Colors.blue)
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 40),
-                            Container(
-                                width: double.infinity,
-                                margin: const EdgeInsets.only(left: 60, right: 60),
-                                height: 50,
-                                alignment: Alignment.center,
-                                decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                                    color: Colors.blue
-                                ),
-                                child:customText("login", color: Colors.white, size: 30)
-                            ),
-                          ]),
-                      const SizedBox(height: 40),
-                      Column(
-                        children: [
-                          SizedBox(
-                            height: 45,
-                            child: emailBox(),
-                          ),
-                          const SizedBox(height: 10),
-                          SizedBox(
-                            height: 45,
-                            child: passWordBox(),
-                          ),
-                          const SizedBox(height: 10),
-                          Container(
                               alignment: Alignment.centerRight,
                               child: TextButton(
                                   onPressed: ()=>passForget(context),
                                   child: customText("password forget", color: Colors.blue
                                   )),
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 40),
-                      SizedBox(
-                        height: 45,
-                        width: 200,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                                setState(() {
-                                  service.getUserId(email, password).then((value){
-                                    if(value == null){
-                                      status = !status;
-                                    }else{
-                                      Token token = value;
-                                      context.go("/home/${token.id}");
-                                    }
-                                  });
-
-                                });
-
-                            });
-                          },
-                          style: customStyleButton(),
-                          child: customText("Sign In",color: Colors.white, size: 20),
+                            )
+                          ],
                         ),
-                      ),
-                      padding(top: 40),
-                      Container(
-                        child: (status)? customText("not exit"):customText("Welcome"),
-                      ),
-                      Container(
-                        alignment: Alignment.centerRight,
+                        const SizedBox(height: 40),
+                        SizedBox(
+                          height: 45,
+                          width: 200,
+                          child: ElevatedButton(
+                            onPressed: () {
+                             setState(() {
+                               log("$email et $password");
+                               service.getUserId(email, password).then((value){
+                                 if(value == null){
+                                   status = !status;
+                                 }else{
+                                   Token token = value;
+                                   context.go("/home/${token.id}");
+                                 }
+                               });
+                             });
+                            },
+                            style: customStyleButton(),
+                            child: customText("connect",color: Colors.white, size: 20),
+                          ),
+                        ),
+                        padding(top: 40),
+                        Container(
+                          child: (status)? customText("not exit"):customText(""),
+                        ),
+                        Container(
+                          alignment: Alignment.centerRight,
                           child: TextButton(
                               onPressed: (){
-                                GoRouter.of(context).push("/signIn");
+                                context.go("/sign_in");
                               },
-                              child: customText("create an account", color: Colors.red)),
-                      ),
-                    ])
-            )));
+                              child: customText("create an account", color: context.theme.primaryColorDark)),
+                        ),
+                      ]) ,
+                )
+            )
+        ));
   }
-
 
   Widget emailBox() {
     return TextField(
@@ -156,7 +137,7 @@ class _LoginApp extends State<LoginApp> {
         label: const Text("Email"),
         hintText: "marcdev@gmail.com",
         prefixIcon: const Icon(
-          Icons.email,
+          Icons.email_outlined,
           color: Colors.red,
         ),
         suffixIcon: emailController.text.isNotEmpty ? IconButton(icon: const Icon(Icons.close),
@@ -179,7 +160,7 @@ class _LoginApp extends State<LoginApp> {
       obscureText: passwordVisibility,
       decoration: InputDecoration(
           prefixIcon: const Icon(
-            Icons.key,
+            Icons.lock_outline,
             color: Colors.black,
           ),
           suffixIcon: IconButton(
@@ -194,7 +175,8 @@ class _LoginApp extends State<LoginApp> {
           ),
           label: const Text("Password"),
           hintText: "password",
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0))),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0))
+      ),
       onSubmitted: (String value) {
         password = value;
       },
@@ -203,3 +185,4 @@ class _LoginApp extends State<LoginApp> {
 
 
 }
+

@@ -1,11 +1,15 @@
 
+import 'dart:developer';
+
 import 'package:animator/animator.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rentalapp/class/function.dart';
+import 'package:rentalapp/class/http/userHttp.dart';
 import 'package:rentalapp/message/messageUpload.dart';
 import 'package:rentalapp/json/message.dart';
+import 'package:rentalapp/view/profit.dart';
 
 import '../json/user.dart';
 import 'package:rentalapp/class/http/messageHttp.dart';
@@ -37,10 +41,17 @@ class _MessageView extends State<MessageView>{
       country: '',
       phoneNumber: 0);
 
+  UserService userService = UserService();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    userService.getOneUser(widget.id).then((value){
+      setState(() {
+        user = value;
+      });
+    });
     getMessage();
   }
 
@@ -48,6 +59,7 @@ class _MessageView extends State<MessageView>{
   getMessage() async{
     try{
       Response response = await dio.get("http://localhost:9001/api/messages/${widget.id}");
+      log("${response.data}");
       if(response.statusCode == 200){
         setState(() {
           messageList = response.data;
@@ -67,7 +79,7 @@ class _MessageView extends State<MessageView>{
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             customText("Mess", size: 30),
-            customText("enger", size: 25, color: Colors.blue, fontSize: FontStyle.italic)
+            customText("enger", size: 25, color: context.theme.primaryColorDark, fontSize: FontStyle.italic)
           ],
         ),
       ),

@@ -2,6 +2,7 @@
 
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -31,9 +32,9 @@ class EditProfil extends StatelessWidget{
 
 class _EditProfil extends StatefulWidget{
 
-   _EditProfil({required this.userId});
+   const _EditProfil({required this.userId});
 
-  var userId ;
+  final userId ;
 
   @override
   State<_EditProfil> createState() => _Edit();
@@ -95,7 +96,7 @@ class _Edit extends State<_EditProfil> {
                             ?const Image(
                           image: AssetImage("images/account-2.png"),)
                             :Image(
-                          image: FileImage(File(userPicture)),fit: BoxFit.cover,
+                          image: MemoryImage(userPicture),fit: BoxFit.cover,
                         )),
                   ),
                   Positioned(
@@ -106,6 +107,8 @@ class _Edit extends State<_EditProfil> {
                         onPress: () {
                           setState(() {
                             userService.getPicture().then((value){
+                              // List<int> list = value.codeUnits;
+                              // Uint8List byte = Uint8List.fromList(value);
                               userPicture = value;
                             }).then((value)=>setState(()=>userPicture));
                           });
@@ -120,7 +123,7 @@ class _Edit extends State<_EditProfil> {
                       const SizedBox(height: 20),
                       TextFormField(
                           decoration: buildInputDecoration(
-                              "Username", Icons.person_outline),
+                              "Username", Icons.person_outline, context),
                         onChanged: ((value){
                           username = value;
                         }),
@@ -129,7 +132,7 @@ class _Edit extends State<_EditProfil> {
                       TextFormField(
                         keyboardType: TextInputType.emailAddress,
                           decoration: buildInputDecoration(
-                              "E-mail", Icons.email_outlined),
+                              "E-mail", Icons.email_outlined, context),
                         onFieldSubmitted: ((value){
                           setState(() {
                             if(checkEmail(value)){
@@ -148,11 +151,11 @@ class _Edit extends State<_EditProfil> {
                             floatingLabelStyle: TextStyle(
                                 color: context.theme.primaryColor),
                             focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(100),
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                             label: const Text("password"),
-                            prefixIcon: const Icon(Icons.password),
+                            prefixIcon: Icon(Icons.password, color: context.theme.primaryColorDark,),
                               suffixIcon: IconButton(
                                 icon: (visibility)? const Icon(Icons.visibility_off):const Icon(Icons.visibility),
                                 onPressed: (){
@@ -172,7 +175,7 @@ class _Edit extends State<_EditProfil> {
                       TextFormField(
                         keyboardType: TextInputType.text,
                           decoration: buildInputDecoration(
-                              "Country", Icons.flag),
+                              "Country", Icons.flag, context),
                         onFieldSubmitted: ((value){
                           setState(() {
                             country = value;
@@ -183,7 +186,7 @@ class _Edit extends State<_EditProfil> {
                       TextFormField(
                         keyboardType: TextInputType.number,
                         decoration: buildInputDecoration(
-                            "Phone number", Icons.phone),
+                            "Phone number", Icons.phone, context),
                         onFieldSubmitted: ((value){
                           phone = value;
                         }),
@@ -201,7 +204,7 @@ class _Edit extends State<_EditProfil> {
                               });
                               UserDto user1 = UserDto(
                                   username,
-                                  userPicture,
+                                  String.fromCharCodes(userPicture),
                                   email,
                                   password,
                                   user.sex,
@@ -228,19 +231,23 @@ class _Edit extends State<_EditProfil> {
                       Container(
                         alignment: Alignment.bottomRight,
                         child:   ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStatePropertyAll(context.theme.primaryColorDark)
+                          ),
                             onPressed: (){
-                              userService.delUser(widget.userId);
-                              Navigator.push(context, MaterialPageRoute(builder: (context){
-                                return const Home(id: null);
-                              }));
+                              String str = '0';
+                              userService.delUser(widget.userId).then((val){
+                                context.push("/home/$str");
+                              });
                             },
-                            child: const Text("Delete Account", style: TextStyle(color: Colors.red),)
+                            child: Text("Delete Account", style: context.theme.textTheme.titleMedium,)
                         ),
                       ),
                       const SizedBox(height: 120),
-                      const Text.rich(
+                      Text.rich(
                         TextSpan(
-                          text: "Made by @marcdev"
+                          text: "Made by @marcdev",
+                          style: context.theme.textTheme.titleSmall
                         )
                       ),
                       const SizedBox(height: 10,)

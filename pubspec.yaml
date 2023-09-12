@@ -49,6 +49,11 @@ dependencies:
   animator: ^3.3.0
   states_rebuilder: ^6.1.0+1
   shared_preferences: ^2.2.1
+  dotted_border: ^2.0.0+3
+  accordion: ^2.6.0
+  url_launcher: ^6.1.14
+  dropdown_button2: ^2.3.8
+  dismissible_carousel_viewpager: ^0.0.7
 
 dev_dependencies:
   flutter_test:

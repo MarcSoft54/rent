@@ -13,13 +13,15 @@ class UserService{
   ImagePicker imagePicker = ImagePicker();
 
   late User user;
+  String url = "http://localhost:9001/api/users";
 
   getOneUser(var id) async{
     try{
-      Response response = await dio.get("http://localhost:9001/api/users/$id");
+      Response response = await dio.get("$url/$id");
       if(response.statusCode == 200){
         log("${response.data}");
-       return user = User.fromJson(response.data);
+        user = User.fromJson(response.data);
+        return user;
       }
     }catch(e){
       log("$e");
@@ -30,7 +32,7 @@ class UserService{
 
   postUser(UserDto userDto) async{
     try{
-      Response response = await dio.post("http://localhost:9001/api/users", data: userDto.toJson());
+      Response response = await dio.post(url, data: userDto.toJson());
       // if(response.statusCode == 200){
       //   // return response.statusMessage;
       // }
@@ -41,7 +43,7 @@ class UserService{
 
   putUser(UserDto userDto, var id) async{
     try{
-      Response response = await dio.put("http://localhost:9001/api/users/$id", data: userDto.toJson());
+      Response response = await dio.put("$url/$id", data: userDto.toJson());
       if(response.statusCode == 200){
         return response.statusMessage;
       }
@@ -52,23 +54,26 @@ class UserService{
 
   delUser(var id) async{
     try{
-      Response response = await dio.delete("http://localhost:9001/api/users/$id");
+      Response response = await dio.delete("$url/$id");
     }catch(e){
       log("$e");
     }
   }
 
   getPicture() async{
-    var file = await imagePicker.pickImage(source: ImageSource.gallery);
+    XFile? file = await imagePicker.pickImage(source: ImageSource.gallery);
     if(file != null){
-      return file.path;
+      file.readAsBytes().then((value){
+        return value;
+      });
+      // return file.path;
     }
   }
 
   getUserId(String email, String password) async{
     try{
-      Response response = await dio.get("http://localhost:9001/api/users/login?email=$email&password=$password");
-
+      Response response = await dio.get("$url/login",
+          queryParameters: {'email': email, 'password': password});
       if(response.statusCode == 200){
         log("${response.data}");
         return Token.fromJson(response.data);

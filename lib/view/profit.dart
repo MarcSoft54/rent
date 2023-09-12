@@ -25,7 +25,7 @@ class Profit extends StatelessWidget{
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: ProfitPage(id:id),
+      home: ProfitPage(id: id),
     );
   }
 
@@ -57,10 +57,10 @@ class _ProfitPage extends State<ProfitPage>{
     super.initState();
     log("Profile : ${widget.id}");
     userService.getOneUser(widget.id).then((value){
-        setState(() {
-          user = value;
-          log("user $user");
-        });
+          setState(() {
+            user = value;
+            log("user $user");
+          });
     });
   }
 
@@ -151,7 +151,11 @@ class _ProfitPage extends State<ProfitPage>{
                     endIcon: false,
                     onPress: (){
                       logOut(context, (){
-                        context.go("/");
+                        setState(() {
+                          String str = '0';
+                          log("log out");
+                          context.push("/home/$str");
+                        });
                       });
                     },
                   ),
@@ -204,7 +208,7 @@ class _ProfitPage extends State<ProfitPage>{
                 alignment: Alignment.bottomRight,
                 child: TextButton(
                   onPressed: (){
-                    GoRouter.of(context).go("/sign_in");
+                    context.go("/sign_in");
                   },
                   child: customText("create Account", color: Colors.blue),
                 ),

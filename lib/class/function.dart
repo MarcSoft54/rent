@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:rentalapp/view/profit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -248,7 +249,7 @@ Future<void> alert(BuildContext context) {
       });
 }
 
-InputDecoration buildInputDecoration(String name, IconData icon) {
+InputDecoration buildInputDecoration(String name, IconData icon, BuildContext context) {
   return InputDecoration(
       floatingLabelStyle: const TextStyle(
           color: Colors.blue),
@@ -257,7 +258,7 @@ InputDecoration buildInputDecoration(String name, IconData icon) {
       ),
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
       label: Text(name),
-      prefixIcon: Icon(icon),
+      prefixIcon: Icon(icon, color: context.theme.primaryColorDark),
   );
 }
 
