@@ -47,12 +47,14 @@ class _Upload extends State<Upload>{
   final dio = Dio();
   var pictures ;
   String video = '';
-  List<String> mapUrl = [];
-  double price = 0;
-  String city = '';
+  String mapUrl = '';
+
+  String? city;
+  String? country;
   late Uint8List pict;
   List<String> images = [];
-  String description = '';
+  String? description;
+
   List<String> types = [
     "Modern room",
     "Classic room",
@@ -62,6 +64,12 @@ class _Upload extends State<Upload>{
     "Apartment modern"
   ];
   String? selectType;
+  int? room;
+  int? shower;
+  int? kitchen;
+  int? living_room;
+  int? parking;
+  double? price;
 
   late VideoPlayerController _controller;
 
@@ -327,6 +335,9 @@ class _Upload extends State<Upload>{
                                           child: TextFormField(
                                             maxLength: 2,
                                             decoration: sectionDecorationInput(context, "rooms"),
+                                            onFieldSubmitted: (value){
+                                              room = int.parse(value);
+                                            },
                                           ),
                                         ),
                                         SizedBox(
@@ -334,6 +345,9 @@ class _Upload extends State<Upload>{
                                           child: TextFormField(
                                             maxLength: 2,
                                             decoration: sectionDecorationInput(context, "shower"),
+                                            onFieldSubmitted: (value){
+                                              shower = int.parse(value);
+                                            },
                                           ),
                                         ),
                                         SizedBox(
@@ -341,6 +355,9 @@ class _Upload extends State<Upload>{
                                           child: TextFormField(
                                             maxLength: 2,
                                             decoration: sectionDecorationInput(context, "kitchen"),
+                                            onFieldSubmitted: (value){
+                                              kitchen = int.parse(value);
+                                            },
                                           ),
                                         ),
                                       ],
@@ -354,6 +371,9 @@ class _Upload extends State<Upload>{
                                           child: TextFormField(
                                             maxLength: 2,
                                             decoration: sectionDecorationInput(context, "parking"),
+                                            onFieldSubmitted: (value){
+                                              parking = int.parse(value);
+                                            },
                                           ),
                                         ),
                                         SizedBox(
@@ -361,6 +381,9 @@ class _Upload extends State<Upload>{
                                           child: TextFormField(
                                             maxLength: 15,
                                             decoration: sectionDecorationInput(context, "price by month"),
+                                            onFieldSubmitted: (value){
+                                              price = double.parse(value);
+                                            },
                                           ),
                                         ),
                                         SizedBox(
@@ -368,6 +391,9 @@ class _Upload extends State<Upload>{
                                           child: TextFormField(
                                             maxLength: 2,
                                             decoration: sectionDecorationInput(context, "living room"),
+                                            onFieldSubmitted: (value){
+                                              living_room = int.parse(value);
+                                            },
                                           ),
                                         )
                                       ],
@@ -392,6 +418,9 @@ class _Upload extends State<Upload>{
                                       child: TextFormField(
                                         maxLength: 15,
                                         decoration: sectionDecorationInput(context, "country "),
+                                        onFieldSubmitted: (value){
+                                          country = value;
+                                        },
                                       ),
                                     ),
                                     SizedBox(
@@ -399,6 +428,9 @@ class _Upload extends State<Upload>{
                                       child: TextFormField(
                                         maxLength: 15,
                                         decoration: sectionDecorationInput(context, "city "),
+                                        onFieldSubmitted: (value){
+                                          city = value;
+                                        },
                                       ),
                                     ),
                                   ],
@@ -407,7 +439,10 @@ class _Upload extends State<Upload>{
                                     maxLength: 500,
                                     maxLines: 5,
                                     minLines: 2,
-                                    decoration: sectionDecorationInput(context, "give you condition...")
+                                    decoration: sectionDecorationInput(context, "give you condition..."),
+                                  onChanged: (value){
+                                      description = value;
+                                  },
                                 ),
                               ],
                             )

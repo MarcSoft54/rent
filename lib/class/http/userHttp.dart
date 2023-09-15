@@ -13,7 +13,7 @@ class UserService{
   ImagePicker imagePicker = ImagePicker();
 
   late User user;
-  String url = "http://localhost:9001/api/users";
+  String url = "http://192.168.1.2:9001/api/users";
 
   getOneUser(var id) async{
     try{
@@ -72,8 +72,7 @@ class UserService{
 
   getUserId(String email, String password) async{
     try{
-      Response response = await dio.get("$url/login",
-          queryParameters: {'email': email, 'password': password});
+      Response response = await dio.get("http://192.168.1.2:9001/api/users/login?email=$email&password=$password");
       if(response.statusCode == 200){
         log("${response.data}");
         return Token.fromJson(response.data);
