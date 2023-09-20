@@ -6,10 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:rentalapp/acceuil.dart';
-import 'package:rentalapp/json/token.dart';
 import 'package:rentalapp/json/user.dart';
-import 'package:rentalapp/login.dart';
 import 'package:rentalapp/class/http/userHttp.dart';
 import 'package:rentalapp/view/profit.dart';
 
@@ -71,7 +68,7 @@ class _SignIn extends State<SignIn> {
 
   Future<void> httpPostUser(UserDto user) async{
     try{
-      Response response = await dio.post("http://localhost:9001/api/users",
+      Response response = await dio.post("http://192.168.43.109:9001/api/users",
           data: user.toJson());
       if(response.statusCode == 200){
         messages = response.data;
@@ -196,7 +193,7 @@ class _SignIn extends State<SignIn> {
                                 label: customText("Confirmed the password"),
                                 hintText: "password",
                                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),),
-                              onSubmitted: (String value) {
+                              onChanged: (String value) {
                                 setState(() {
                                   password_2 = value;
                                 });
@@ -208,7 +205,7 @@ class _SignIn extends State<SignIn> {
                             // height: 45,
                             child: TextField(
                               keyboardType: TextInputType.number,
-                              onSubmitted: (value){
+                              onChanged: (value){
                                 setState(() {
                                   phoneNumber = int.parse(value);
                                 });
@@ -246,8 +243,8 @@ class _SignIn extends State<SignIn> {
                                             sex,
                                             phoneNumber,
                                             country);
+                                        log("$userDto");
                                         httpPostUser(userDto).then((value) => context.go("/login")
-
                                         );
                                       }
                                     }
@@ -313,7 +310,7 @@ class _SignIn extends State<SignIn> {
         hintText: string,
         // errorText: "error password",
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),),
-      onSubmitted: (String value) {
+      onChanged: (String value) {
         password = value;
       },
     );

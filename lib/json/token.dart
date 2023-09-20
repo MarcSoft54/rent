@@ -1,10 +1,14 @@
 
 class Token{
-  var id;
+  final String username;
+  final String accessToken;
 
-  Token({required this.id});
+  Token({required this.username, required this.accessToken});
   factory Token.fromJson(Map<String, dynamic> json){
-    return Token(id: json["id"]);
+    return Token(
+      username: json["username"],
+      accessToken: json["accessToken"]
+    );
   }
 
 }

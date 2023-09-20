@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rentalapp/json/user.dart';
 
+import '../../json/loginDTO.dart';
 import '../../json/token.dart';
 
 class UserService{
@@ -13,7 +14,7 @@ class UserService{
   ImagePicker imagePicker = ImagePicker();
 
   late User user;
-  String url = "http://192.168.1.2:9001/api/users";
+  String url = "http://192.168.43.109:9001/api/users";
 
   getOneUser(var id) async{
     try{
@@ -70,9 +71,10 @@ class UserService{
     }
   }
 
-  getUserId(String email, String password) async{
+  getUserId(LoginDto loginDto) async{
     try{
-      Response response = await dio.get("http://192.168.1.2:9001/api/users/login?email=$email&password=$password");
+      Response response = await dio.get("http://192.168.43.109:9001/api/users/auth/login", data: loginDto.toJson());
+      log("${response.headers}");
       if(response.statusCode == 200){
         log("${response.data}");
         return Token.fromJson(response.data);

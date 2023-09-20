@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:rentalapp/view/profit.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 
 Text customText(String data,

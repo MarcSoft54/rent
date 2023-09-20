@@ -1,13 +1,11 @@
 
 import 'dart:developer';
 
-import 'package:flutter/animation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:rentalapp/class/http/userHttp.dart';
+import 'package:rentalapp/json/loginDTO.dart';
 import 'package:rentalapp/json/token.dart';
 import 'package:rentalapp/view/profit.dart';
 
@@ -41,16 +39,18 @@ class _LoginApp extends State<LoginApp> with SingleTickerProviderStateMixin{
   final emailController = TextEditingController();
   bool passwordVisibility = true;
   var password;
-  var email = "marcdev45@gmail.com";
+  var email ;
   bool status = false;
   UserService service = UserService();
+  bool alerts = false;
+  String alertBox = 'check you information';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: GestureDetector(
             onTap: (() => FocusScope.of(context).requestFocus(FocusNode())),
             child: Container(
-              height: MediaQuery.of(context).size.height,
+                height: MediaQuery.of(context).size.height,
                 decoration: BoxDecoration(
                     gradient: LinearGradient(
                         colors: [
@@ -90,23 +90,36 @@ class _LoginApp extends State<LoginApp> with SingleTickerProviderStateMixin{
                           width: 200,
                           child: ElevatedButton(
                             onPressed: () {
-                             setState(() {
-                               log("$email et $password");
-                               service.getUserId(email, password).then((value){
-                                 if(value == null){
-                                   status = !status;
-                                 }else{
-                                   Token token = value;
-                                   context.go("/home/${token.id}");
-                                 }
-                               });
-                             });
+                              setState(() {
+                                if(email == null || password == null){
+                                setState(() {
+                                  alerts = !alerts;
+                                });
+                                }else{
+                                  log("$email et $password");
+                                  LoginDto loginDto = LoginDto(email, password);
+                                  log(loginDto.email);
+                                  service.getUserId(loginDto).then((value){
+                                    if(value == null){
+                                      log("ici : $value");
+                                      status = !status;
+                                    }else{
+                                      Token token = value;
+                                      log(token.accessToken);
+                                      context.go("/home/${token.accessToken}");
+                                    }
+                                  });
+                                }
+                              });
                             },
                             style: customStyleButton(),
                             child: customText("connect",color: Colors.white, size: 20),
                           ),
                         ),
-                        padding(top: 40),
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: alerts?Text(alertBox, style: const TextStyle(color: Colors.redAccent, fontSize: 20),):Container(),
+                        ),
                         Container(
                           child: (status)? customText("not exit"):customText(""),
                         ),
@@ -144,6 +157,7 @@ class _LoginApp extends State<LoginApp> with SingleTickerProviderStateMixin{
             onPressed: () {
               setState(() {
                 emailController.clear();
+                email = null;
               });
             })
             : Container(
@@ -151,7 +165,6 @@ class _LoginApp extends State<LoginApp> with SingleTickerProviderStateMixin{
         ),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
       ),
-      onSubmitted: (String value) => {email = value},
     );
   }
 
@@ -177,7 +190,7 @@ class _LoginApp extends State<LoginApp> with SingleTickerProviderStateMixin{
           hintText: "password",
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0))
       ),
-      onSubmitted: (String value) {
+      onChanged: (String value) {
         password = value;
       },
     );

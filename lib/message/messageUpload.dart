@@ -1,9 +1,10 @@
 
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:rentalapp/class/function.dart';
 
 import '../json/message.dart';
@@ -26,20 +27,19 @@ class _MessagePage extends State<MessagePage>{
   final text = TextEditingController();
   String sms = '';
   User user = User(
-    id: 0,
-    username: "",
-    userPicture: "",
-    email: "",
-    sex: "",
-    country: "",
-    phoneNumber: 0
+      id: 0,
+      username: "",
+      userPicture: "",
+      email: "",
+      sex: "",
+      country: "",
+      phoneNumber: 0
   );
 
 
   Dio dio = Dio();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     listMessage.add(widget.message);
     getOneUser();
@@ -51,16 +51,16 @@ class _MessagePage extends State<MessagePage>{
       Response response = await dio.get("http://localhost:9001/api/messages/${widget.message.createBy}");
       if(response.statusCode == 200){
         setState(() {
-         List<dynamic> list = response.data;
-         print(list);
-         for(int i=0; i<list.length; i++ ){
-           Message message = Message.fromJson(list[i]);
-           listMessage.add(message);
-         }
+          List<dynamic> list = response.data;
+          print(list);
+          for(int i=0; i<list.length; i++ ){
+            Message message = Message.fromJson(list[i]);
+            listMessage.add(message);
+          }
         });
       }
     }catch(e){
-      print(e);
+      log("this is the message page$e");
     }
   }
 
@@ -73,7 +73,7 @@ class _MessagePage extends State<MessagePage>{
         });
       }
     }catch(e){
-      print(e);
+      log("$e");
     }
   }
 
@@ -81,7 +81,7 @@ class _MessagePage extends State<MessagePage>{
     try{
       Response response = await dio.post("http://localhost:9001/api/messages/$id", data: messageDto.toJson() );
     }catch(e){
-      print(e);
+      log("$e");
     }
   }
 
@@ -124,17 +124,16 @@ class _MessagePage extends State<MessagePage>{
                 },
                 itemBuilder: (context, Message message){
                   return Align(
-                      alignment: true
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
-                        child: Card(
-                          elevation: 8,
-                            child: Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Text(message.content),
-                            ),
-
-                        ),
+                    alignment: true
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
+                    child: Card(
+                      elevation: 8,
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Text(message.content),
+                      ),
+                    ),
                   );
                 },
               ),
@@ -147,27 +146,32 @@ class _MessagePage extends State<MessagePage>{
                 maxLines: 3,
                 maxLength: 500,
                 controller: text,
-                onChanged: (valeur){
+                onChanged: (value){
                   setState(() {
-                    sms = valeur;
+                    sms = value;
                   });
                 },
                 decoration: InputDecoration(
+                  // i have modify the logic of this part code
+                  // so know to send an message i need to be show that the sms is not empty
+                  // and i need to clear the list after send a sms
                   icon: IconButton(
+                      alignment: Alignment.centerRight, // i have modify here ...
                       onPressed: (){
-                          text.clear();
-                           MessageDto messageDto = MessageDto(
-                             sms, 2
-                           );
-
-                          sms = '';
+                        text.clear();
+                        if(sms != ''){
+                          MessageDto messageDto = MessageDto(
+                              sms, 2
+                          );
                           postMessage(messageDto, user.id).then((value){
                             setState(() {
+                              listMessage.clear(); // here too ...
                               listMessage.add(value);
                             });
+                            sms = '';
                           });
-
-                      },
+                          }
+                        },
                       icon: const Icon(Icons.send_rounded, color: Colors.blue)
                   ),
                   border: const OutlineInputBorder(
@@ -180,7 +184,6 @@ class _MessagePage extends State<MessagePage>{
             )
           ],
         ),
-
       ),
     );
 

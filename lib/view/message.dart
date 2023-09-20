@@ -73,15 +73,16 @@ class _MessageView extends State<MessageView>{
   @override
   Widget build(BuildContext context) {
     double size = MediaQuery.of(context).size.width;
+    Color colorLight = context.theme.primaryColorLight;
+    var style = context.theme.textTheme;
     return Scaffold(
+      backgroundColor: colorLight.withOpacity(.5),
       appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            customText("Mess", size: 30),
-            customText("enger", size: 25, color: context.theme.primaryColorDark, fontSize: FontStyle.italic)
-          ],
-        ),
+        backgroundColor: colorLight,
+        title: Text.rich(TextSpan(
+          text: "Messengers",
+          style: style.headlineLarge
+        ))
       ),
       body: GestureDetector(
         onTap: (() => FocusScope.of(context).requestFocus(FocusNode())),
@@ -94,11 +95,11 @@ class _MessageView extends State<MessageView>{
               child: Animator(
                 duration: const Duration(milliseconds: 1000),
                 cycles: 0,
-                curve: Curves.easeInOut,
+                curve: Curves.elasticOut,
                 tween: Tween(begin: 15.0,end: 25.0),
-                builder: (context, animatoState, child) =>
+                builder: (context, animateState, child) =>
                     customIcon(Icons.cabin_outlined,colors: Colors.blue,
-                        size: animatoState.value *5
+                        size: animateState.value *5
                     ),
               ),
             )

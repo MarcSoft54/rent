@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:rentalapp/login.dart';
 import 'package:rentalapp/signIn.dart';
 
@@ -45,13 +47,29 @@ class _MyHomePageState extends State<MyHomePage> {
           Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             SizedBox(
                 height:height * .68,
-                child: Container(
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: NetworkImage(
-                              image,
-                            ),
-                            fit: BoxFit.cover)))),
+                child: Stack(
+                  children: [
+                    Container(
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: NetworkImage(
+                                  image,
+                                ),
+                                fit: BoxFit.cover))),
+                    Positioned(
+                      bottom: 0,
+                        right: 0,
+                        child: TextButton.icon(
+                          onPressed:(){
+                            context.go("/home/null");
+                          },
+                          icon:Icon(LineAwesomeIcons.forward),
+                          label: Text("pass"),
+                        )
+                    )
+                  ],
+                )
+            ),
             Expanded(
                 child: Container(
                   color: Colors.blue,

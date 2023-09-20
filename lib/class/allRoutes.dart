@@ -12,7 +12,7 @@ import '../view/profit.dart';
 
 
 final GoRouter router = GoRouter(
-  initialLocation: "/home/:id",
+  // initialLocation: "/home/:id",
     routes: [
       GoRoute(
           path: "/home/:id",
@@ -45,7 +45,7 @@ final GoRouter router = GoRouter(
           builder: ((context, state)=> const MyApp())
       ),
       GoRoute(
-          path: "/start",
+          path: "/",
           builder: ((context, state)=> const Init())
       ),
       GoRoute(

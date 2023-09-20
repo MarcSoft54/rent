@@ -68,8 +68,11 @@ class _ProfitPage extends State<ProfitPage>{
 
   @override
   Widget build(BuildContext context) {
+    Color colorLight = context.theme.primaryColorLight;
     return Scaffold(
+      backgroundColor: colorLight.withOpacity(.5),
       appBar: AppBar(
+        backgroundColor: colorLight,
         centerTitle: true,
         title: Text("Profile", style: Theme.of(context).textTheme.headlineLarge,),
       ),
