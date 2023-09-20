@@ -2,7 +2,6 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rentalapp/class/http/userHttp.dart';
 import 'package:rentalapp/json/loginDTO.dart';
@@ -43,7 +42,7 @@ class _LoginApp extends State<LoginApp> with SingleTickerProviderStateMixin{
   bool status = false;
   UserService service = UserService();
   bool alerts = false;
-  String alertBox = 'check you information';
+  String alertBox = 'password or email invalid';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,24 +89,24 @@ class _LoginApp extends State<LoginApp> with SingleTickerProviderStateMixin{
                           width: 200,
                           child: ElevatedButton(
                             onPressed: () {
+                              log("$email et $password");
                               setState(() {
                                 if(email == null || password == null){
                                 setState(() {
                                   alerts = !alerts;
                                 });
                                 }else{
-                                  log("$email et $password");
+                                  log("c'est arriver");
                                   LoginDto loginDto = LoginDto(email, password);
-                                  log(loginDto.email);
                                   service.getUserId(loginDto).then((value){
-                                    if(value == null){
-                                      log("ici : $value");
-                                      status = !status;
-                                    }else{
-                                      Token token = value;
-                                      log(token.accessToken);
-                                      context.go("/home/${token.accessToken}");
-                                    }
+                                     setState(() {
+                                       if(value == null){
+                                         status = !status;
+                                       }else{
+                                         Token token = value;
+                                         context.go("/home/${token.accessToken}");
+                                       }
+                                     });
                                   });
                                 }
                               });
@@ -121,7 +120,7 @@ class _LoginApp extends State<LoginApp> with SingleTickerProviderStateMixin{
                           child: alerts?Text(alertBox, style: const TextStyle(color: Colors.redAccent, fontSize: 20),):Container(),
                         ),
                         Container(
-                          child: (status)? customText("not exit"):customText(""),
+                          child: (status)? customText("check well you information"):customText(""),
                         ),
                         Container(
                           alignment: Alignment.centerRight,
@@ -165,6 +164,7 @@ class _LoginApp extends State<LoginApp> with SingleTickerProviderStateMixin{
         ),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
       ),
+      onSubmitted: (String value) => email = value,
     );
   }
 
@@ -190,7 +190,7 @@ class _LoginApp extends State<LoginApp> with SingleTickerProviderStateMixin{
           hintText: "password",
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0))
       ),
-      onChanged: (String value) {
+      onSubmitted: (String value) {
         password = value;
       },
     );

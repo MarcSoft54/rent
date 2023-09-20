@@ -6,7 +6,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:rentalapp/acceuil.dart';
 import 'package:rentalapp/class/function.dart';
 import 'package:rentalapp/class/http/userHttp.dart';
 
@@ -59,7 +58,7 @@ class _ProfitPage extends State<ProfitPage>{
     userService.getOneUser(widget.id).then((value){
           setState(() {
             user = value;
-            log("user $user");
+            log("user ${widget.id}");  // current user
           });
     });
   }
@@ -124,7 +123,7 @@ class _ProfitPage extends State<ProfitPage>{
                     height: 40,
                     child: ElevatedButton(
                       onPressed: (){
-                        GoRouter.of(context).go("/edit_profile/${user.id}");
+                        context.push("/edit_profile/${widget.id}");
                       },
                       style: customStyleButton(),
                       child: Text("Edit Profile",
@@ -139,7 +138,7 @@ class _ProfitPage extends State<ProfitPage>{
                     title: "Post a house",
                     icon: LineAwesomeIcons.home,
                     onPress: (){
-                      context.go("/upload/${user.id}");
+                      context.go("/upload/${widget.id}");
                     },),
                   ProfileSetting(
                       title: "Information",

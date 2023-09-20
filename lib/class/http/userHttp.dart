@@ -18,7 +18,10 @@ class UserService{
 
   getOneUser(var id) async{
     try{
-      Response response = await dio.get("$url/$id");
+      var headers = {
+        'Authorization': 'Bearer $id'
+      };
+      Response response = await dio.request("$url/", options: Options(method: 'GET',headers: headers));
       if(response.statusCode == 200){
         log("${response.data}");
         user = User.fromJson(response.data);
@@ -73,7 +76,7 @@ class UserService{
 
   getUserId(LoginDto loginDto) async{
     try{
-      Response response = await dio.get("http://192.168.43.109:9001/api/users/auth/login", data: loginDto.toJson());
+      Response response = await dio.post("http://192.168.43.109:9001/api/users/auth/login", data: loginDto.toJson());
       log("${response.headers}");
       if(response.statusCode == 200){
         log("${response.data}");
