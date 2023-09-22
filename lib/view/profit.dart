@@ -58,7 +58,7 @@ class _ProfitPage extends State<ProfitPage>{
     userService.getOneUser(widget.id).then((value){
           setState(() {
             user = value;
-            log("user ${widget.id}");  // current user
+            // log("user ${widget.id}");  // current user
           });
     });
   }
@@ -138,7 +138,7 @@ class _ProfitPage extends State<ProfitPage>{
                     title: "Post a house",
                     icon: LineAwesomeIcons.home,
                     onPress: (){
-                      context.go("/upload/${widget.id}");
+                      context.push("/upload/${widget.id}");
                     },),
                   ProfileSetting(
                       title: "Information",

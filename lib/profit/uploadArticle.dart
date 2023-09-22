@@ -1,20 +1,20 @@
 
-import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:accordion/accordion.dart';
 import 'package:accordion/controllers.dart';
+// import 'package:better_player/better_player.dart';
 import 'package:dismissible_carousel_viewpager/dismissible_carousel_viewpager.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+// import 'package:flick_video_player/flick_video_player.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:rentalapp/view/profit.dart';
-import 'package:video_player/video_player.dart';
+// import 'package:video_player/video_player.dart';
 
 
 class UploadFile extends StatelessWidget{
@@ -52,6 +52,7 @@ class _Upload extends State<Upload>{
   String? city;
   String? country;
   late Uint8List pict;
+  // late Uint8List videoFileUrl;
   List<String> images = [];
   String? description;
 
@@ -71,18 +72,41 @@ class _Upload extends State<Upload>{
   int? parking;
   double? price;
 
-  late VideoPlayerController _controller;
+  var list;
 
-  @override
-  void initState() {
-    super.initState();
-    setState(() {
-      _controller = VideoPlayerController.file(File(video));
-    });
-    // ..initialize().then((_) {
-    //   setState(() {});
-    // });
-  }
+  // late FlickManager flickManager;
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   flickManager = FlickManager(
+  //       videoPlayerController: VideoPlayerController.networkUrl(Uri.parse('https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4'))
+  //   );
+  // }
+  // @override
+  // void dispose() {
+  //   flickManager.dispose();
+  //   super.dispose();
+  // }
+
+  // late BetterPlayerController _playerController ;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   BetterPlayerDataSource dataSource = BetterPlayerDataSource(
+  //   BetterPlayerDataSourceType.network
+  //   ,"https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4");
+  //   _playerController = BetterPlayerController(
+  //     const BetterPlayerConfiguration(),
+  //     betterPlayerDataSource: dataSource
+  //   );
+  // }
+  //
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   _playerController.dispose();
+  // }
 
 
   ImagePicker picker = ImagePicker();
@@ -97,30 +121,42 @@ class _Upload extends State<Upload>{
         });
       });
     }
-    log("total d'image : ${images.length}");
+    // log("total images : ${images.length}");
   }
 
-  getOneVideo() async{
-    XFile? videoUrl = await picker.pickVideo(source: ImageSource.gallery);
-    if(videoUrl != null){
-      final fromData = FormData.fromMap({
-        'date':DateTime.now(),
-        'file' : await MultipartFile.fromFile(videoUrl.path, filename: videoUrl.name)
-      }).toString();
-      video = fromData;
-      log("Controller : $video");
-    }
-  }
+  // getOneVideo() async{
+  // XFile? videoByte = await picker.pickVideo(source: ImageSource.gallery);
+  // log("reach");
+  // if(videoByte != null){
+  //   BetterPlayerDataSource dataSource = BetterPlayerDataSource(
+  //       BetterPlayerDataSourceType.file
+  //       , videoByte.path);
+  //   _playerController = BetterPlayerController(  // getting the news intense of the video
+  //       const BetterPlayerConfiguration(),
+  //       betterPlayerDataSource: dataSource
+  //   );
+  //
+  //   videoByte.readAsBytes().then((value){  // i can steel remove this after if this better_player take
+  //     setState(() {
+  //       list = value;  // the value of the video convert into Uint8List
+  //       video = String.fromCharCodes(value); // converting the video to string before send it
+  //
+  //     });
+  //   });
+  // }
+  //
+  // }
+
 
   @override
   Widget build(BuildContext context) {
     final colorDark = context.theme.primaryColorDark;
-    final colorLight = context.theme.primaryColor;
+    final colorLight = context.theme.primaryColorLight;
     final style = context.theme.primaryTextTheme.titleMedium;
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          backgroundColor: colorDark.withOpacity(.3),
+          backgroundColor: colorLight,
           title: Text("home upload", style: context.theme.textTheme.headlineSmall,),
         ),
         body: GestureDetector(
@@ -141,37 +177,69 @@ class _Upload extends State<Upload>{
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+                  // Stack(
+                  //   alignment: Alignment.center,
+                  //   children: [
+                  //     DottedBorder(
+                  //         dashPattern: const [15],
+                  //         borderType: BorderType.RRect,
+                  //         radius: const Radius.circular(12),
+                  //         padding: const EdgeInsets.only(left: 6, right: 6),
+                  //         color: Colors.black.withOpacity(.4),
+                  //         strokeWidth: 2,
+                  //         child: SizedBox(
+                  //           height: 200,
+                  //           width: double.infinity,
+                  //           child: AspectRatio(         // video player here ...
+                  //             aspectRatio: 16/9,
+                  //             child: BetterPlayer(
+                  //               controller: _playerController,
+                  //             )
+                  //           ),
+                  //         )
+                  //     ),
+                  //     Positioned(
+                  //         bottom: 0,
+                  //         right: 0,
+                  //         child: IconButton(                                    // video player here ...
+                  //             color: colorDark,
+                  //             onPressed: (){
+                  //                 setState(() {
+                  //                   getOneVideo();
+                  //                   // flickManager = FlickManager(
+                  //                   //     videoPlayerController: VideoPlayerController.file(File.fromRawPath(list))
+                  //                   // );
+                  //                 });
+                  //             },
+                  //             icon:  Icon(Icons.video_camera_back_outlined,size: 35,color: colorDark))
+                  //     )
+                  //   ],
+                  // ),
                   Stack(
-                    alignment: Alignment.center,
                     children: [
                       DottedBorder(
-                          dashPattern: const [15],
-                          borderType: BorderType.RRect,
-                          radius: const Radius.circular(12),
-                          padding: const EdgeInsets.all(6),
-                          color: Colors.black.withOpacity(.4),
-                          strokeWidth: 2,
-                          child: SizedBox(
-                            height: 200,
-                            width: double.infinity,
-                            child: _controller.value.isInitialized?
-                            AspectRatio( aspectRatio: _controller.value.aspectRatio,
-                                child: VideoPlayer(_controller))
-                                :  Icon(Icons.image_outlined, color: colorDark.withOpacity(.2),size: 120,),
-                          )
+                        strokeWidth: 2.0,
+                        dashPattern: [1],
+                        borderType: BorderType.RRect,
+                        child: Container(
+                          height: 200,
+                          width: double.infinity,
+                        ),
                       ),
-                      Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: IconButton(
-                              color: colorDark,
-                              onPressed: (){
-                                setState(() {
-                                  getOneVideo();
-                                });
-                              },
-                              icon:  Icon(Icons.video_camera_back_outlined,size: 35,color: colorDark))
-                      )
+                      Container(
+                          alignment: Alignment.center,
+                          child:  Icon(
+                            Icons.upload_outlined,
+                            color: colorDark,
+                            size: MediaQuery.of(context).size.width*.4,)
+                      ),
+                      // const Positioned(
+                      //     child: Text.rich(
+                      //       TextSpan(
+                      //         text: "\t welcome \n here you have the opportunity to post "
+                      //       )
+                      //     ),
+                      // )
                     ],
                   ),
                   const SizedBox(height: 50),
@@ -231,6 +299,7 @@ class _Upload extends State<Upload>{
                     ),
                   ),
                   Accordion(
+                    key: const ValueKey("A1"),
                       maxOpenSections: 8,
                       headerBackgroundColor: colorDark.withOpacity(.9),
                       headerBackgroundColorOpened: colorDark.withOpacity(.3),
@@ -309,99 +378,21 @@ class _Upload extends State<Upload>{
                             ],
                           ),
                           leftIcon: Icon(Icons.library_add, color: context.theme.cardColor),
-                        ),
-                        AccordionSection(
-                            headerPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                            sectionClosingHapticFeedback: SectionHapticFeedback.light,
-                            sectionOpeningHapticFeedback: SectionHapticFeedback.heavy,
-                            header: Text("House constitution", style: style,),
-                            leftIcon: Icon(Icons.home_outlined, color: context.theme.cardColor,),
-                            content: Container(
-                                height: 200,
-                                child: Column(
-                                  children: [
-                                    Text.rich(
-                                        TextSpan(
-                                            text: "please full the correct information for you house",
-                                            style: context.theme.textTheme.titleSmall
-                                        )
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                      children: [
-                                        SizedBox(
-                                          width: 80,
-                                          child: TextFormField(
-                                            maxLength: 2,
-                                            decoration: sectionDecorationInput(context, "rooms"),
-                                            onFieldSubmitted: (value){
-                                              room = int.parse(value);
-                                            },
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 80,
-                                          child: TextFormField(
-                                            maxLength: 2,
-                                            decoration: sectionDecorationInput(context, "shower"),
-                                            onFieldSubmitted: (value){
-                                              shower = int.parse(value);
-                                            },
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 80,
-                                          child: TextFormField(
-                                            maxLength: 2,
-                                            decoration: sectionDecorationInput(context, "kitchen"),
-                                            onFieldSubmitted: (value){
-                                              kitchen = int.parse(value);
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10,),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                      children: [
-                                        SizedBox(
-                                          width: 80,
-                                          child: TextFormField(
-                                            maxLength: 2,
-                                            decoration: sectionDecorationInput(context, "parking"),
-                                            onFieldSubmitted: (value){
-                                              parking = int.parse(value);
-                                            },
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 80,
-                                          child: TextFormField(
-                                            maxLength: 15,
-                                            decoration: sectionDecorationInput(context, "price by month"),
-                                            onFieldSubmitted: (value){
-                                              price = double.parse(value);
-                                            },
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 80,
-                                          child: TextFormField(
-                                            maxLength: 2,
-                                            decoration: sectionDecorationInput(context, "living room"),
-                                            onFieldSubmitted: (value){
-                                              living_room = int.parse(value);
-                                            },
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                )
-                            )
-                        ),
+                        )
+                      ],
+
+                  ),
+                  Accordion(
+                      key: const ValueKey("A2"),
+                      maxOpenSections: 8,
+                      headerBackgroundColor: colorDark.withOpacity(.9),
+                      headerBackgroundColorOpened: colorDark.withOpacity(.3),
+                      headerBorderColorOpened: colorLight,
+                      contentBorderWidth: 2,
+                      openAndCloseAnimation: true,
+                      scaleWhenAnimating: true,
+                      flipRightIconIfOpen: true,
+                      children: [
                         AccordionSection(
                             headerPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                             sectionClosingHapticFeedback: SectionHapticFeedback.light,
@@ -417,8 +408,8 @@ class _Upload extends State<Upload>{
                                       width: 150,
                                       child: TextFormField(
                                         maxLength: 15,
-                                        decoration: sectionDecorationInput(context, "country "),
-                                        onFieldSubmitted: (value){
+                                        decoration: sectionDecorationInput(context, "country"),
+                                        onChanged: (value){
                                           country = value;
                                         },
                                       ),
@@ -427,8 +418,8 @@ class _Upload extends State<Upload>{
                                       width: 150,
                                       child: TextFormField(
                                         maxLength: 15,
-                                        decoration: sectionDecorationInput(context, "city "),
-                                        onFieldSubmitted: (value){
+                                        decoration: sectionDecorationInput(context, "city"),
+                                        onChanged: (value){
                                           city = value;
                                         },
                                       ),
@@ -436,15 +427,128 @@ class _Upload extends State<Upload>{
                                   ],
                                 ),
                                 TextFormField(
-                                    maxLength: 500,
-                                    maxLines: 5,
-                                    minLines: 2,
-                                    decoration: sectionDecorationInput(context, "give you condition..."),
+                                  maxLength: 500,
+                                  maxLines: 5,
+                                  minLines: 2,
+                                  decoration: sectionDecorationInput(context, "give you condition...", b: true,
+                                      text: "the house is inside the barrier and is secure water .... so here you can say every thing that you want"
+                                  ),
                                   onChanged: (value){
-                                      description = value;
+                                    description = value;
                                   },
                                 ),
                               ],
+                            )
+                        ),
+                  ]),
+                  Accordion(
+                      key: const ValueKey("A3"),
+                      maxOpenSections: 8,
+                      headerBackgroundColor: colorDark.withOpacity(.9),
+                      headerBackgroundColorOpened: colorDark.withOpacity(.3),
+                      headerBorderColorOpened: colorLight,
+                      contentBorderWidth: 2,
+                      openAndCloseAnimation: true,
+                      scaleWhenAnimating: true,
+                      flipRightIconIfOpen: true,
+                      children: [
+                        AccordionSection(
+                            headerPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                            sectionClosingHapticFeedback: SectionHapticFeedback.light,
+                            sectionOpeningHapticFeedback: SectionHapticFeedback.heavy,
+                            header: Text("House constitution", style: style,),
+                            leftIcon: Icon(Icons.home_outlined, color: context.theme.cardColor,),
+                            content: SizedBox(
+                                width: double.infinity,
+                                height: 230,
+                                child: Column(
+                                  children: [
+                                    Text.rich(
+                                        TextSpan(
+                                            text: "please full the correct information for you house",
+                                            style: context.theme.textTheme.titleSmall
+                                        )
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      children: [
+                                        SizedBox(
+                                          width: 80,
+                                          child: TextFormField(
+                                            keyboardType: TextInputType.number,
+                                            maxLength: 2,
+                                            decoration: sectionDecorationInput(context, "rooms"),
+                                            onChanged: (value){
+                                              room = int.parse(value);
+                                            },
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 80,
+                                          child: TextFormField(
+                                            keyboardType: TextInputType.number,
+                                            maxLength: 2,
+                                            decoration: sectionDecorationInput(context, "shower"),
+                                            onChanged: (value){
+                                              shower = int.parse(value);
+                                            },
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 80,
+                                          child: TextFormField(
+                                            keyboardType: TextInputType.number,
+                                            maxLength: 2,
+                                            decoration: sectionDecorationInput(context, "kitchen"),
+                                            onChanged: (value){
+                                              kitchen = int.parse(value);
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10,),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      children: [
+                                        SizedBox(
+                                          width: 80,
+                                          child: TextFormField(
+                                            keyboardType: TextInputType.number,
+                                            maxLength: 2,
+                                            decoration: sectionDecorationInput(context, "parking"),
+                                            onChanged: (value){
+                                              parking = int.parse(value);
+                                            },
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 80,
+                                          child: TextFormField(
+                                            keyboardType: TextInputType.number,
+                                            maxLength: 15,
+                                            decoration: sectionDecorationInput(context, "price by month"),
+                                            onChanged: (value){
+                                              price = double.parse(value);
+                                            },
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 80,
+                                          child: TextFormField(
+                                            keyboardType: TextInputType.number,
+                                            maxLength: 2,
+                                            decoration: sectionDecorationInput(context, "living room"),
+                                            onChanged: (value){
+                                              living_room = int.parse(value);
+                                            },
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                )
                             )
                         ),
                       ]),
@@ -468,7 +572,7 @@ class _Upload extends State<Upload>{
                               backgroundColor: MaterialStatePropertyAll(colorDark),
                             ),
                             onPressed: (){
-
+                              log("room:$room, living_room : $living_room: shower : $shower");
                             },
                             child: Text("Post", style: style)),
                       )
@@ -548,8 +652,10 @@ class _Upload extends State<Upload>{
   }
 
 
-  InputDecoration sectionDecorationInput(BuildContext context, String string) {
+  InputDecoration sectionDecorationInput(BuildContext context, String string,
+      {bool b = false ,String text = ""}) {
     return InputDecoration(
+      hintText: b? text: "",
       border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12)
       ),
@@ -559,19 +665,7 @@ class _Upload extends State<Upload>{
   }
 
 
-// _openMap() async {
-//   // Android
-//   String url = 'geo:52.32,4.917';
-//   if (await launchUrl(Uri(url))) {
-//     await launchUrl(url);
-//   } else {
-//     // iOS
-//     const url = 'http://maps.apple.com/?ll=52.32,4.917';
-//     if (await launchUrl(url)) {
-//       await launchUrl(url);
-//     } else {
-//       throw 'Could not launch $url';
-//     }
-//   }
-// }
+
 }
+
+

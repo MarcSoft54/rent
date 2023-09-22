@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:rentalapp/class/allRoutes.dart';
 
-void main(){
+void main() {
   runApp(const RouteApp());
 }
 

@@ -81,9 +81,10 @@ class _Edit extends State<_EditProfil> {
       backgroundColor: colorLight.withOpacity(.999),
       appBar: AppBar(
         backgroundColor: colorDark,
+        centerTitle: true,
         title: Text.rich(
           TextSpan(
-            text: "Modification",
+            text: "Edit profile",
             style: style.headlineMedium
           )
         ),
@@ -100,7 +101,7 @@ class _Edit extends State<_EditProfil> {
                     SizedBox(
                       width: 120, height: 120,
                       child: ClipRRect(borderRadius: BorderRadius.circular(100),
-                          child: (userPicture ==null)
+                          child: (userPicture == null)
                               ?const Image(
                             image: AssetImage("images/account-2.png"),)
                               :Image(

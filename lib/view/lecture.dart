@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dismissible_carousel_viewpager/dismissible_carousel_viewpager.dart';
 import 'package:flutter/material.dart';
 import 'package:rentalapp/class/function.dart';
+import 'package:rentalapp/json/article.dart';
 import 'package:rentalapp/view/profit.dart';
 
 class Lecture extends StatelessWidget{
@@ -29,6 +31,22 @@ class _Lecture extends StatefulWidget{
 }
 
 class _LectureState extends State<_Lecture>{
+
+  Article article = Article(
+      id: 0,
+      typeArticle: "typeArticle",
+      country: "country",
+      city: "city",
+      mapUrl: "mapUrl",
+      pictureUrl: ["pictureUrl"],
+      videoUrl: "videoUrl",
+      description: "description",
+      room: 0,
+      shower: 0,
+      parking: 0,
+      kitchen: 0,
+      livingRoom: 0
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -97,18 +115,15 @@ class _LectureState extends State<_Lecture>{
               Container(
                 height: 200,
                 width: double.infinity,
-                child: CarouselSlider.builder(
-                    itemCount: 5,
-                    itemBuilder: (context, index, i){
-                      return Card(
-                        elevation: 12,
-                        child: Icon(Icons.cabin, size: 200,),
-                      );
-                    },
-                    options: CarouselOptions(
-                        autoPlay: false
-                    )
-                ),
+                child: DismissibleCarouselViewPager(
+                  itemCount: 5,
+                  itemBuilder: (content, index){
+                    return Card(
+                      elevation: 12,
+                      child: Image.asset("images/house.png"),
+                    );
+                  },
+                )
               ),
               const SizedBox(height: 10,),
               TextFormField(
