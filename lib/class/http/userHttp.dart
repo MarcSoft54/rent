@@ -14,7 +14,7 @@ class UserService{
   ImagePicker imagePicker = ImagePicker();
 
   late User user;
-  String url = "http://192.168.43.109:9001/api/users";
+  String url = "http://192.168.43.82:9001/api/users";
 
   getOneUser(var id) async{
     try{

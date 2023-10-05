@@ -68,7 +68,7 @@ class _SignIn extends State<SignIn> {
 
   Future<void> httpPostUser(UserDto user) async{
     try{
-      Response response = await dio.post("http://192.168.43.109:9001/api/users",
+      Response response = await dio.post("http://192.168.43.82:9001/api/users",
           data: user.toJson());
       if(response.statusCode == 200){
         messages = response.data;
